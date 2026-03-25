@@ -1,0 +1,111 @@
+---
+const { pathname } = Astro.url;
+
+const navLinks = [
+    { href: "/", label: "Home" },
+    { href: "/blog", label: "Blog" },
+    { href: "/projects", label: "Projects" },
+    { href: "/about", label: "About" },
+];
+
+const isActive = (href: string) => pathname === href;
+---
+
+<nav>
+    <div class="nav-left">
+        <!-- <a href="/" class="logo"> üb </a> -->
+        <ul>
+            <li>
+                <a href="/" aria-current={isActive("/") ? "page" : undefined}
+                    >home</a
+                >
+            </li>
+            <li>
+                <a
+                    href="/blog"
+                    aria-current={isActive("/blog") ? "page" : undefined}
+                    >blog</a
+                >
+            </li>
+            <li>
+                <a
+                    href="/projects"
+                    aria-current={isActive("/projects") ? "page" : undefined}
+                    >projects</a
+                >
+            </li>
+            <li>
+                <a
+                    href="/log"
+                    aria-current={isActive("/log") ? "page" : undefined}>log</a
+                >
+            </li>
+        </ul>
+    </div>
+    <div>
+        <div class="keyboard-shortcut">
+            <div>⌘</div>
+            <div>K</div>
+        </div>
+    </div>
+</nav>
+
+<style>
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        background-color: var(--surface);
+        width: 100%;
+    }
+
+    html[data-theme="light"] nav {
+        border: 0.5px solid var(--border);
+    }
+
+    nav > .nav-left {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    ul {
+        list-style: none;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .keyboard-shortcut {
+        display: flex;
+        flex-direction: row;
+        gap: 4px;
+        color: var(--nav-text);
+    }
+
+    .keyboard-shortcut > div {
+        border: 1px solid var(--border);
+        background-color: var(--surface-alt);
+        padding: 4px 8px;
+        /* border-radius: 4px; */
+        width: 24px;
+        height: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* .logo {
+        font-size: 18px;
+        font-weight: bold;
+        padding: 0px 8px;
+        border: 1px solid var(--border);
+        background-color: var(--surface-alt);
+        text-decoration: none;
+        border-radius: 4px;
+    }
+
+    .logo:hover {
+        text-decoration: none;
+    } */
+</style>

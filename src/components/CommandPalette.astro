@@ -1,0 +1,230 @@
+---
+
+---
+
+<div
+    class="command-palette-container"
+    id="palette-container"
+    aria-hidden="true"
+>
+    <div id="command-palette">
+        <div class="search-bar">
+            <div>⌘</div>
+            <input
+                type="text"
+                id="palette-input"
+                placeholder="type a command..."
+                autocomplete="off"
+            />
+        </div>
+        <div id="palette-results">
+            <ul id="palette-list"></ul>
+        </div>
+    </div>
+</div>
+
+<style is:global>
+    .command-palette-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(255, 255, 255, 0);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+    }
+
+    .command-palette-container[aria-hidden="true"] {
+        display: none;
+    }
+
+    .search-bar {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        align-items: center;
+        font-size: 24px;
+        padding-bottom: 8px;
+    }
+
+    #command-palette {
+        width: min(700px, 90vw);
+        background-color: var(--bg);
+        border: 1px solid var(--border);
+        /* border-radius: 8px; */
+        padding: 16px;
+    }
+
+    #palette-input {
+        width: 100%;
+        padding: 8px;
+        border: none;
+        background-color: var(--bg);
+        color: var(--text);
+        font-family: inherit;
+        font-size: 16px;
+    }
+
+    #palette-input:focus {
+        outline: none;
+    }
+
+    #palette-list {
+        list-style: none;
+    }
+
+    #palette-list li {
+        padding: 12px;
+        /* border-radius: 4px; */
+        cursor: pointer;
+    }
+
+    #palette-list li p:nth-child(1) {
+        font-size: 18px;
+    }
+
+    #palette-list li p:nth-child(2) {
+        font-size: 14px;
+        color: var(--muted);
+    }
+
+    #palette-list li.selected {
+        background-color: var(--surface);
+    }
+</style>
+
+<script>
+    const commands = [
+        {
+            label: "home",
+            description: "go to homepage",
+            action: () => (window.location.href = "/"),
+        },
+        {
+            label: "blog",
+            description: "go to blog",
+            action: () => (window.location.href = "/blog"),
+        },
+        {
+            label: "projects",
+            description: "go to projects",
+            action: () => (window.location.href = "/projects"),
+        },
+        {
+            label: "log",
+            description: "go to log",
+            action: () => (window.location.href = "/log"),
+        },
+        {
+            label: "theme",
+            description: "toggle theme",
+            action: () => {
+                const current =
+                    document.documentElement.getAttribute("data-theme");
+                const next = current === "dark" ? "light" : "dark";
+                document.documentElement.setAttribute("data-theme", next);
+                localStorage.setItem("theme", next);
+            },
+        },
+        {
+            label: "github",
+            description: "open github profile",
+            action: () => window.open("https://github.com/ubzrst", "_blank"),
+        },
+        {
+            label: "twitter",
+            description: "open twitter profile",
+            action: () => window.open("https://twitter.com/ubzrst", "_blank"),
+        },
+    ];
+
+    const container = document.getElementById("palette-container")!;
+    const input = document.getElementById("palette-input") as HTMLInputElement;
+    const list = document.getElementById("palette-list") as HTMLUListElement;
+
+    let selectedIndex = 0;
+    let visibleCommands: typeof commands = [];
+
+    function setSelected(index: number) {
+        const items = list.querySelectorAll("li");
+        items.forEach((li) => li.classList.remove("selected"));
+        if (items[index]) items[index].classList.add("selected");
+        selectedIndex = index;
+    }
+
+    function renderItems(
+        items: { label: string; description: string; action: () => void }[],
+    ) {
+        visibleCommands = items;
+        selectedIndex = 0;
+        list.innerHTML = "";
+        items.forEach((cmd, i) => {
+            const li = document.createElement("li");
+            if (i === 0) li.classList.add("selected");
+            li.innerHTML = `<p>${cmd.label}</p><p>${cmd.description}</p>`;
+            li.addEventListener("click", () => {
+                cmd.action();
+                close();
+            });
+            list.appendChild(li);
+        });
+    }
+
+    function open() {
+        container.setAttribute("aria-hidden", "false");
+        input.value = "";
+        renderItems(commands);
+        input.focus();
+    }
+
+    function close() {
+        container.setAttribute("aria-hidden", "true");
+        input.value = "";
+    }
+
+    document.addEventListener("keydown", (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+            e.preventDefault();
+            container.getAttribute("aria-hidden") === "true" ? open() : close();
+        }
+        if (e.key === "Escape") close();
+
+        if (container.getAttribute("aria-hidden") === "true") return;
+
+        if (e.key === "ArrowDown") {
+            e.preventDefault();
+            setSelected(
+                Math.min(selectedIndex + 1, visibleCommands.length - 1),
+            );
+        }
+        if (e.key === "ArrowUp") {
+            e.preventDefault();
+            setSelected(Math.max(selectedIndex - 1, 0));
+        }
+        if (e.key === "Enter") {
+            e.preventDefault();
+            visibleCommands[selectedIndex]?.action();
+            close();
+        }
+    });
+
+    container.addEventListener("click", (e) => {
+        if (e.target === container) close();
+    });
+
+    input.addEventListener("input", () => {
+        const q = input.value.toLowerCase();
+        renderItems(
+            q
+                ? commands.filter(
+                      (c) => c.label.includes(q) || c.description.includes(q),
+                  )
+                : commands,
+        );
+    });
+</script>
