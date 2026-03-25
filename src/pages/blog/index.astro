@@ -1,0 +1,74 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const posts = (await getCollection("blog")).sort(
+    (a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
+        b.data.date.valueOf() - a.data.date.valueOf(),
+);
+---
+
+<BaseLayout title="blog">
+    <section class="page">
+        <h1>blog</h1>
+        <ul class="post-list">
+            {
+                posts.map((post) => (
+                    <li>
+                        <div class="post-header">
+                            <a href={`/blog/${post.id}`}>{post.data.title}</a>
+                            <span class="date">
+                                {post.data.date.toISOString().slice(0, 10)}
+                            </span>
+                        </div>
+                        <p class="description">{post.data.description}</p>
+                    </li>
+                ))
+            }
+        </ul>
+    </section>
+</BaseLayout>
+
+<style>
+    .page {
+        width: 100%;
+    }
+
+    h1 {
+        color: var(--heading);
+        margin-bottom: 1.5rem;
+    }
+
+    .post-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .post-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .post-list li {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .post-list a {
+        font-size: 1.1rem;
+    }
+
+    .date {
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+
+    .description {
+        color: var(--muted);
+        font-size: 0.9rem;
+    }
+</style>

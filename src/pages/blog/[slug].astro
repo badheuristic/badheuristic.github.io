@@ -1,0 +1,174 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+    const posts = await getCollection("blog");
+    return posts.map((post: CollectionEntry<"blog">) => ({
+        params: { slug: post.id },
+        props: { post },
+    }));
+}
+
+interface Props {
+    post: CollectionEntry<"blog">;
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={post.data.title}>
+    <article class="post">
+        <header>
+            <h1>{post.data.title}</h1>
+            <time>{post.data.date.toISOString().slice(0, 10)}</time>
+            {
+                post.data.tags && post.data.tags.length > 0 && (
+                    <div class="tags">
+                        {post.data.tags.map((tag: string) => (
+                            <a href={`/tags/${tag}`}>{tag}</a>
+                        ))}
+                    </div>
+                )
+            }
+        </header>
+        <div class="content">
+            <Content />
+        </div>
+    </article>
+</BaseLayout>
+
+<style>
+    .post {
+        width: 100%;
+    }
+
+    header {
+        margin-bottom: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    h1 {
+        color: var(--heading);
+    }
+
+    time {
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+
+    .tags {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .tags a {
+        font-size: 0.8rem;
+        color: var(--muted);
+        border: 1px solid var(--border);
+        padding: 2px 8px;
+        text-decoration: none;
+    }
+
+    .tags a:hover {
+        color: var(--text);
+    }
+
+    .content {
+        line-height: 1.8;
+    }
+
+    .content :global(p) {
+        margin-bottom: 1.2rem;
+    }
+
+    .content :global(h1),
+    .content :global(h2),
+    .content :global(h3),
+    .content :global(h4) {
+        margin-top: 2.2rem;
+        margin-bottom: 0.6rem;
+        color: var(--heading);
+    }
+
+    .content :global(ul),
+    .content :global(ol) {
+        padding-left: 1.8rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .content :global(ul) {
+        list-style: none;
+    }
+
+    .content :global(ul li) {
+        position: relative;
+        padding-left: 1rem;
+    }
+
+    .content :global(ul li::before) {
+        content: "–";
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+    }
+
+    .content :global(ol) {
+        list-style: decimal;
+    }
+
+    .content :global(ol li::marker) {
+        color: var(--accent);
+    }
+
+    .content :global(.references) {
+        font-size: 0.85rem;
+        color: var(--muted);
+        border-top: 1px solid var(--border);
+        padding-top: 1rem;
+    }
+
+    .content :global(.references a) {
+        color: var(--muted);
+    }
+
+    .content :global(sup a) {
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.75rem;
+    }
+
+    .content :global(.mermaid) {
+        margin: 1.5rem 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    .content :global(.mermaid svg) {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+
+<script is:inline>
+    (async () => {
+        if (!document.querySelector('code.language-mermaid')) return;
+        const { default: mermaid } = await import(
+            'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs'
+        );
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        mermaid.initialize({ startOnLoad: false, theme: isDark ? 'dark' : 'neutral' });
+        document.querySelectorAll('code.language-mermaid').forEach(code => {
+            const pre = code.parentElement;
+            if (!pre) return;
+            const div = document.createElement('div');
+            div.className = 'mermaid';
+            div.textContent = code.textContent ?? '';
+            pre.replaceWith(div);
+        });
+        await mermaid.run();
+    })();
+</script>
