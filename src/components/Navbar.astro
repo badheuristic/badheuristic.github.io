@@ -2,10 +2,10 @@
 const { pathname } = Astro.url;
 
 const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/blog", label: "Blog" },
-    { href: "/projects", label: "Projects" },
-    { href: "/about", label: "About" },
+    { href: "/", label: "home" },
+    { href: "/blog", label: "blog" },
+    { href: "/notes", label: "notes" },
+    { href: "/log", label: "log" },
 ];
 
 const isActive = (href: string) => pathname === href;
@@ -29,9 +29,9 @@ const isActive = (href: string) => pathname === href;
             </li>
             <li>
                 <a
-                    href="/projects"
-                    aria-current={isActive("/projects") ? "page" : undefined}
-                    >projects</a
+                    href="/notes"
+                    aria-current={isActive("/notes") ? "page" : undefined}
+                    >notes</a
                 >
             </li>
             <li>
@@ -73,7 +73,8 @@ const isActive = (href: string) => pathname === href;
     ul {
         list-style: none;
         display: flex;
-        gap: 1rem;
+        flex-wrap: wrap;
+        gap: 0.75rem;
     }
 
     .keyboard-shortcut {
@@ -81,6 +82,16 @@ const isActive = (href: string) => pathname === href;
         flex-direction: row;
         gap: 4px;
         color: var(--nav-text);
+    }
+
+    @media (max-width: 480px) {
+        ul {
+            gap: 0.5rem;
+        }
+
+        .keyboard-shortcut {
+            display: none;
+        }
     }
 
     .keyboard-shortcut > div {
