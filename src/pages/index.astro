@@ -1,10 +1,217 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Tesseract from "../components/Tesseract.astro";
+import { getCollection } from "astro:content";
+
+import type { CollectionEntry } from "astro:content";
+
+const recentPosts = (await getCollection("blog"))
+	.sort(
+		(a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
+			b.data.date.valueOf() - a.data.date.valueOf(),
+	)
+	.slice(0, 3);
 ---
 
 <BaseLayout title="home">
-	<div class="hero">
-		<h1>ubzrst</h1>
-		<p>i am a software engineer</p>
+	<div class="hero-container">
+		<div class="hero">
+			<h1>stephen</h1>
+			<p>ontario, canada</p>
+			<p>eng @ uw</p>
+		</div>
+		<Tesseract />
+	</div>
+	<div class="about">
+		<p>programmer, ml/ai enthusiast, philosophy larper</p>
+	</div>
+	<div class="hegel-quote">
+		<p>
+			"truth is found neither in the thesis nor in the antithesis, but in
+			an emergent synthesis which reconciles the two."
+		</p>
+		<p>~ georg wilhelm friedrich hegel</p>
+	</div>
+	<div class="something-happening">
+		<div class="indicator"></div>
+		<p>is something happening?</p>
+		<p>/idk/ (will call an api later) <a href="">[what is this?]</a></p>
+	</div>
+	<div class="projects">
+		<div class="p-header">
+			<p>projects</p>
+		</div>
+		<div class="p-entry">
+			<div class="p-title">
+				<p>pkdex</p>
+				<p>
+					<a href="https://github.com/ubzrst/pkdex" target="_blank"
+						>[github]</a
+					>
+				</p>
+			</div>
+			<p class="p-tech">react native, pokeapi, langgraph</p>
+			<p class="p-description">
+				mobile application that provides detail pokemon information and
+				battle analysis.
+			</p>
+		</div>
+		<div class="p-entry">
+			<div class="p-title">
+				<p>city mind</p>
+				<p>
+					<a
+						href="https://github.com/nickr145/city-mind"
+						target="_blank">[github]</a
+					>
+				</p>
+			</div>
+			<p class="p-tech">
+				react, python, fastapi, sqlite, pydantic, langchain/langgraph
+			</p>
+			<p class="p-description">
+				federated municipal data platform that lets different city
+				departments in kitchener-waterloo share data while maintaining
+				departmental autonomy and enforcing privacy at the query layer.
+			</p>
+		</div>
+	</div>
+	<div class="recent-posts">
+		<div class="p-header">
+			<p>recent posts</p>
+		</div>
+		{
+			recentPosts.map((post) => (
+				<div class="p-entry">
+					<div class="p-title">
+						<a href={`/blog/${post.id}`}>{post.data.title}</a>
+						<span class="post-date">
+							{post.data.date.toISOString().slice(0, 10)}
+						</span>
+					</div>
+					<p class="p-description">{post.data.description}</p>
+				</div>
+			))
+		}
 	</div>
 </BaseLayout>
+
+<style>
+	.hero-container {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.hero {
+		display: flex;
+		flex-direction: column;
+		justify-content: left;
+		gap: 4px;
+	}
+
+	.hero h1 {
+		font-size: 32px;
+	}
+
+	.hero p {
+		font-size: 16px;
+		color: var(--muted);
+	}
+
+	.about {
+		margin-top: 16px;
+	}
+
+	.hegel-quote {
+		margin: 24px 0px;
+		padding-left: 16px;
+		border-left: 4px solid var(--border);
+	}
+
+	.hegel-quote p:nth-child(1) {
+		font-size: 16px;
+		font-style: italic;
+	}
+
+	.hegel-quote p:nth-child(2) {
+		font-size: 14px;
+		color: var(--muted);
+	}
+
+	.something-happening {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 10px;
+		align-items: center;
+		font-size: 12px;
+	}
+
+	.something-happening .indicator {
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background-color: #ff4444;
+	}
+
+	.something-happening p:nth-child(2) {
+		font-style: italic;
+		color: var(--text);
+	}
+
+	.something-happening p:nth-child(3) {
+		color: var(--accent);
+	}
+
+	.something-happening a {
+		color: var(--muted);
+	}
+
+	.projects,
+	.recent-posts {
+		margin-top: 32px;
+	}
+
+	.p-header {
+		font-size: 24px;
+		font-weight: bold;
+	}
+
+	.p-entry {
+		margin-top: 16px;
+	}
+
+	.p-title {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	.p-entry .p-title p:nth-child(1) {
+		font-size: 16px;
+		font-weight: bold;
+	}
+
+	.p-tech {
+		font-style: italic;
+	}
+
+	.p-entry .p-tech,
+	.p-description {
+		font-size: 14px;
+		color: var(--muted);
+	}
+
+	.p-entry .p-description {
+		margin-top: 8px;
+		font-size: 14px;
+		color: var(--text);
+	}
+
+	.post-date {
+		font-size: 13px;
+		color: var(--muted);
+	}
+</style>
