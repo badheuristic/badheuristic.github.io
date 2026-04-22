@@ -6,3 +6,8 @@ built with [astro](https://astro.build/)
 bun install
 bun run dev
 ```
+
+if you use nix:
+```bash
+nix develop
+```
