@@ -1,7 +1,7 @@
 ---
 title: "building city mind"
 date: 2026-03-25T11:38:00
-description: "a description of the solution i built during the fci x langchain hackathon"
+description: "a description of the solution i built during the FCI x LangChain hackathon"
 tags: [ project, hackathon, ai ]
 ---
 

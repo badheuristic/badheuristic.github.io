@@ -11,10 +11,23 @@ const posts = (await getCollection("blog")).sort(
 <BaseLayout title="blog">
     <section class="page">
         <h1>blog</h1>
-        <ul class="post-list">
+        <div class="filter-controls">
+            <input
+                type="text"
+                id="search-input"
+                placeholder="Search posts by title or tag..."
+            />
+        </div>
+        <ul class="post-list" id="post-list">
             {
                 posts.map((post) => (
-                    <li>
+                    <li
+                        class="post-item"
+                        data-title={post.data.title.toLowerCase()}
+                        data-tags={(post.data.tags || [])
+                            .join(",")
+                            .toLowerCase()}
+                    >
                         <div class="post-header">
                             <a href={`/blog/${post.id}`}>{post.data.title}</a>
                             <span class="date">
@@ -37,6 +50,26 @@ const posts = (await getCollection("blog")).sort(
     h1 {
         color: var(--heading);
         margin-bottom: 1.5rem;
+    }
+
+    .filter-controls {
+        margin-bottom: 2rem;
+    }
+
+    #search-input {
+        width: 100%;
+        padding: 0.5rem 0.8rem;
+        font-size: 1rem;
+        font-family: inherit;
+        border: 1px solid var(--border);
+        border-radius: 0px;
+        background-color: transparent;
+        color: var(--text);
+        outline: none;
+    }
+
+    #search-input:focus {
+        border-color: var(--accent);
     }
 
     .post-header {
@@ -72,3 +105,38 @@ const posts = (await getCollection("blog")).sort(
         font-size: 0.9rem;
     }
 </style>
+
+<script is:inline>
+    document.addEventListener("DOMContentLoaded", () => {
+        const searchInput = document.getElementById("search-input");
+        const postItems = document.querySelectorAll(".post-item");
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const tagFilter = urlParams.get("tag");
+
+        if (tagFilter) {
+            searchInput.value = tagFilter;
+        }
+
+        const filterPosts = () => {
+            const query = searchInput.value.toLowerCase().trim();
+
+            postItems.forEach((item) => {
+                const title = item.getAttribute("data-title") || "";
+                const tags = item.getAttribute("data-tags") || "";
+
+                if (title.includes(query) || tags.includes(query)) {
+                    item.style.display = "";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        };
+
+        searchInput.addEventListener("input", filterPosts);
+
+        if (searchInput.value) {
+            filterPosts();
+        }
+    });
+</script>

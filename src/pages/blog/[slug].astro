@@ -26,7 +26,7 @@ const { Content } = await render(post);
                 post.data.tags && post.data.tags.length > 0 && (
                     <div class="tags">
                         {post.data.tags.map((tag: string) => (
-                            <a href={`/tags/${tag}`}>{tag}</a>
+                            <a href={`/blog?tag=${tag}`}>{tag}</a>
                         ))}
                     </div>
                 )
