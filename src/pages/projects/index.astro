@@ -1,11 +1,61 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const projects = [
+    {
+        title: "InfraLens",
+        subtitle: "ConHacks 2026 Hackathon (April 2026)",
+        technologies: ["DigitalOcean", "Snowflake", "FastAPI", "NextJS", "Terraform", "ElevenLabs", "Twilio"],
+        description: "An automated cloud rightsizing pipeline using metrics, Terraform, and LLMs. Won the MLH Best Use of DigitalOcean Award at ConHacks 2026.",
+        github: "https://github.com/BravesDevs/ConHacks2026"
+    },
+    {
+        title: "CityMind",
+        subtitle: "FCI x LangChain Hackathon (March 2026)",
+        technologies: ["React", "FastAPI", "Python", "SQLite", "LangGraph", "Claude Sonnet", "Pytest"],
+        description: "A governed municipal data gateway enforcing role-based access control and privacy. Won 1st place for the City Data OS problem statement in the hackathon.",
+        github: "https://github.com/nickr145/city-mind"
+    },
+    {
+        title: "MazeEnv",
+        subtitle: "ECE 657A Course Assignment (Winter 2026)",
+        technologies: ["Python", "NumPy", "Matplotlib", "Pandas", "Reinforcement Learning"],
+        description: "Benchmarking temporal difference control algorithms on grid-world maze navigation to analyze convergence, variance, and behavioral differences across hazard densities.",
+        github: "https://github.com/badheuristic/maze_env"
+    },
+    {
+        title: "MNIST Neural Network from Scratch",
+        subtitle: "",
+        technologies: ["NumPy", "Python", "Matplotlib"],
+        description: "Developed a fully-connected feedforward neural network utilizing only NumPy without high-level ML libraries, achieving ~95.8% training accuracy.",
+        github: "https://github.com/badheuristic/mnist-classifier"
+    }
+];
 ---
 
 <BaseLayout title="projects">
     <section class="page">
         <h1>projects</h1>
-        <p class="empty">nothing here yet</p>
+        <ul class="project-list">
+            {
+                projects.map((project) => (
+                    <li class="project-card">
+                        <div class="project-header">
+                            <h2>
+                                <a href={project.github} target="_blank" rel="noopener noreferrer">{project.title}</a>
+                            </h2>
+                            {project.subtitle && <span class="subtitle">{project.subtitle}</span>}
+                        </div>
+                        <p class="description">{project.description}</p>
+                        <div class="technologies">
+                            {project.technologies.map((tech) => (
+                                <span class="tech-tag">{tech}</span>
+                            ))}
+                        </div>
+                    </li>
+                ))
+            }
+        </ul>
     </section>
 </BaseLayout>
 
@@ -19,7 +69,65 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         margin-bottom: 1.5rem;
     }
 
-    .empty {
+    .project-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+        padding: 0;
+    }
+
+    .project-card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .project-header {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+    .project-header h2 {
+        font-size: 1.3rem;
+        margin: 0;
+    }
+
+    .project-header a {
+        color: var(--heading);
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+
+    .project-header a:hover {
+        opacity: 0.7;
+    }
+
+    .subtitle {
+        font-size: 0.85rem;
         color: var(--muted);
+    }
+
+    .description {
+        font-size: 0.95rem;
+        color: var(--text);
+        line-height: 1.5;
+    }
+
+    .technologies {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-top: 0.2rem;
+    }
+
+    .tech-tag {
+        font-size: 0.75rem;
+        background-color: var(--surface);
+        color: var(--text);
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+        border: 1px solid var(--border);
     }
 </style>
