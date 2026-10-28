@@ -13,7 +13,7 @@
   --on-surface-alt-muted: rgb(245 245 245 / 0.55);
   --surface-alt-hover: rgb(255 255 255 / 0.08);
   --scrim: rgb(255 255 255 / 0.6);
-  --particle: rgb(0 0 0 / 0.12);
+  --particle: rgb(0 0 0 / 0.22);
 
   /* Type */
   --font: 'Iosevka Aile', system-ui, -apple-system, 'Segoe UI', sans-serif;
