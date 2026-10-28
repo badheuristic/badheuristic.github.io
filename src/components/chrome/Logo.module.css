@@ -1,0 +1,21 @@
+.logo {
+  display: inline-flex;
+  align-items: baseline;
+  font-size: var(--text-base);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brace {
+  font-weight: 400;
+  color: var(--fg-muted);
+}
+
+.star {
+  display: inline-block;
+  transition: transform 600ms var(--ease-out);
+}
+
+.logo:hover .star {
+  transform: rotate(180deg);
+}

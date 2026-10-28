@@ -1,0 +1,29 @@
+.switch {
+  display: flex;
+  align-items: baseline;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.item {
+  display: contents;
+}
+
+.divider {
+  padding-inline: 0.35em;
+  color: var(--fg-faint);
+}
+
+.option {
+  color: var(--fg-muted);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.option:hover,
+.option[aria-pressed='true'] {
+  color: var(--fg);
+}
+
+.option[aria-pressed='true'] {
+  cursor: default;
+}

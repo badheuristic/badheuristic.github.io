@@ -1,0 +1,63 @@
+/* Design tokens. Monotone only; no borders, no rounded corners. */
+
+:root {
+  /* Theme: light (default) */
+  --bg: #ffffff;
+  --fg: #000000;
+  --fg-muted: #7a7a7a;
+  --fg-faint: #dcdcdc;
+  --surface: #d9d9d9;
+  --surface-alt: #636363;
+  --scrim: rgb(255 255 255 / 0.6);
+  --particle: rgb(0 0 0 / 0.12);
+
+  /* Type */
+  --font: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: clamp(1.125rem, 0.9rem + 0.6vw, 1.5rem);
+  --text-display: clamp(4rem, 1rem + 9vw, 10rem);
+  --tracking-display: -0.065em;
+  --leading-display: 0.85;
+
+  /* Spacing */
+  --gutter: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+
+  /* Reserved zones (see ARCHITECTURE.md) */
+  --mascot-size: 280px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 150ms;
+  --dur: 300ms;
+
+  /* Layers */
+  --z-particles: 1;
+  --z-content: 2;
+  --z-chrome: 3;
+  --z-overlay: 4;
+  --z-mascot: 5;
+  --z-chat: 6;
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #222222;
+  --fg: #ffffff;
+  --fg-muted: #bdbdbd;
+  --fg-faint: #3a3a3a;
+  --surface: #dcdcdc;
+  --surface-alt: #111111;
+  --scrim: rgb(34 34 34 / 0.6);
+  --particle: rgb(255 255 255 / 0.12);
+
+  color-scheme: dark;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --mascot-size: 110px;
+  }
+}
