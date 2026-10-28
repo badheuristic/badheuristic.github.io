@@ -36,6 +36,7 @@
 
   /* Reserved zones for fixed elements (see ARCHITECTURE.md) */
   --mascot-size: 280px;
+  --mascot-home-size: clamp(200px, 26vw, 340px);
   --zone-title-w: 34vw;
   --zone-title-h: clamp(8rem, 22vh, 14rem);
   --zone-rail-w: 9rem;
@@ -46,7 +47,8 @@
   --dur: 300ms;
 
   /* Layers */
-  --z-particles: 1;
+  --z-particles: 0;
+  --z-backdrop: 1; /* fixed section title: in front of particles, behind content */
   --z-content: 2;
   --z-chrome: 3;
   --z-overlay: 4;

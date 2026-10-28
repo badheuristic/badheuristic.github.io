@@ -1,0 +1,21 @@
+/* The reserved corner zone. Clips the mascot while it peeks in from the edges. */
+.corner {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-mascot);
+  width: var(--mascot-size);
+  height: calc(var(--mascot-size) * 1.3);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* The head sits at the bottom of the zone, leaving room above for the speech bubble. */
+.mascot {
+  position: absolute;
+  inset: auto 0 0;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  transform-origin: 50% 70%;
+}

@@ -1,8 +1,9 @@
+/* Sits behind the content (--z-backdrop), so sections scroll over it. */
 .title {
   position: fixed;
   left: var(--gutter);
   bottom: var(--gutter);
-  z-index: var(--z-chrome);
+  z-index: var(--z-backdrop);
   display: flex;
   flex-direction: column;
   max-width: var(--zone-title-w);
@@ -13,14 +14,6 @@
   white-space: nowrap;
   pointer-events: none;
   user-select: none;
-}
-
-/* Clips each line as it slides. The padding leaves room for descenders (p, j). */
-.mask {
-  display: block;
-  overflow: hidden;
-  padding-bottom: 0.15em;
-  margin-bottom: -0.15em;
 }
 
 .line {

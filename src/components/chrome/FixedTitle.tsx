@@ -16,7 +16,14 @@ const TITLES: Record<SectionId, Line[]> = {
   contact: [{ text: 'contact', faint: true }],
 }
 
-/** Large title fixed at the bottom left. Its lines slide out and the next section's slide in. */
+// Distance that puts a line just below the bottom edge of the viewport.
+const belowViewport = (_: number, el: Element) =>
+  window.innerHeight - el.getBoundingClientRect().top + Number(gsap.getProperty(el, 'y'))
+
+/**
+ * Large title fixed at the bottom left, behind the content. Its lines drop out of
+ * the bottom of the viewport and the next section's rise back in from there.
+ */
 export function FixedTitle() {
   const active = useActiveSection()
   const reducedMotion = useReducedMotion()
@@ -26,20 +33,20 @@ export function FixedTitle() {
   // With reduced motion the title swaps instantly instead of waiting for the slide.
   const current = reducedMotion ? active : shown
 
-  // Slide the current lines out, then swap in the new title.
+  // Drop the current lines out, then swap in the new title.
   useLayoutEffect(() => {
     const lines = ref.current!.querySelectorAll('[data-line]')
     if (active === shown) {
       // Settles lines that were partway out if the section flipped back.
-      gsap.to(lines, { yPercent: 0, duration: 0.4, ease: 'power3.out' })
+      gsap.to(lines, { y: 0, duration: 0.4, ease: 'power3.out' })
       return
     }
     if (reducedMotion) return
     const tween = gsap.to(lines, {
-      yPercent: -110,
-      duration: 0.3,
+      y: belowViewport,
+      duration: 0.35,
       ease: 'power2.in',
-      stagger: 0.04,
+      stagger: { each: 0.04, from: 'end' },
       onComplete: () => setShown(active),
     })
     return () => {
@@ -47,7 +54,7 @@ export function FixedTitle() {
     }
   }, [active, shown, reducedMotion])
 
-  // Slide the new lines in from below.
+  // Raise the new lines in from below the viewport.
   useLayoutEffect(() => {
     if (!mounted.current) {
       mounted.current = true
@@ -57,18 +64,20 @@ export function FixedTitle() {
     const lines = ref.current!.querySelectorAll('[data-line]')
     gsap.fromTo(
       lines,
-      { yPercent: 110 },
-      { yPercent: 0, duration: 0.6, ease: 'power3.out', stagger: 0.06 },
+      { y: belowViewport },
+      { y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.06 },
     )
   }, [shown, reducedMotion])
 
   return (
     <div ref={ref} className={styles.title} aria-hidden="true">
       {TITLES[current].map((line, i) => (
-        <span key={`${current}-${i}`} className={`${styles.mask} ${line.small ? styles.small : ''}`}>
-          <span data-line className={`${styles.line} ${line.faint ? styles.faint : ''}`}>
-            {line.text}
-          </span>
+        <span
+          key={`${current}-${i}`}
+          data-line
+          className={`${styles.line} ${line.small ? styles.small : ''} ${line.faint ? styles.faint : ''}`}
+        >
+          {line.text}
         </span>
       ))}
     </div>

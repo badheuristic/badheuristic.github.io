@@ -1,16 +1,8 @@
 .nav {
   position: fixed;
   top: 50%;
-  z-index: var(--z-chrome);
-}
-
-.nav[data-layout='center'] {
-  left: 50%;
-  translate: -50% -50%;
-}
-
-.nav[data-layout='rail'] {
   right: var(--gutter);
+  z-index: var(--z-chrome);
   translate: 0 -50%;
 }
 
@@ -22,16 +14,9 @@
 .items {
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   gap: 0.25rem;
   list-style: none;
-}
-
-.nav[data-layout='center'] .items {
-  align-items: center;
-}
-
-.nav[data-layout='rail'] .items {
-  align-items: flex-end;
 }
 
 /* Positioned and sized from Nav.tsx. */
@@ -61,15 +46,15 @@
 }
 
 @media (max-width: 768px) {
-  /* Same spot in both layouts: a row under the header. Finalized in step 10. */
-  .nav[data-layout] {
+  /* A row under the header. Finalized in step 10. */
+  .nav {
     top: calc(var(--gutter) + 1.75rem);
     right: auto;
     left: var(--gutter);
     translate: none;
   }
 
-  .nav[data-layout] .items {
+  .items {
     flex-direction: row;
     align-items: center;
     margin-left: -0.5rem;

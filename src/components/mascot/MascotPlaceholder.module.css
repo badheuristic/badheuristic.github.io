@@ -1,0 +1,21 @@
+.head {
+  display: grid;
+  place-items: center;
+  width: 55%;
+  aspect-ratio: 1;
+  background: var(--fg);
+  color: var(--bg);
+  animation: bob 3s ease-in-out infinite;
+}
+
+.face {
+  font-family: var(--font-code);
+  font-size: clamp(0.9rem, 2.2vw, 2rem);
+  letter-spacing: 0.05em;
+}
+
+@keyframes bob {
+  50% {
+    translate: 0 -6%;
+  }
+}
