@@ -9,6 +9,8 @@
   --surface: #d9d9d9;
   --surface-alt: #636363;
   --on-surface: #000000;
+  --on-surface-alt: #f5f5f5;
+  --on-surface-alt-muted: rgb(245 245 245 / 0.55);
   --scrim: rgb(255 255 255 / 0.6);
   --particle: rgb(0 0 0 / 0.12);
 
@@ -50,8 +52,8 @@
   --z-particles: 0;
   --z-backdrop: 1; /* fixed section title: in front of particles, behind content */
   --z-content: 2;
-  --z-chrome: 3;
-  --z-overlay: 4;
+  --z-overlay: 3; /* contact card + scrim: over content, under the header and nav */
+  --z-chrome: 4;
   --z-mascot: 5;
   --z-chat: 6;
   --z-cursor: 10;

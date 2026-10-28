@@ -1,0 +1,119 @@
+import { useEffect, useRef, useState } from 'react'
+import { gsap } from 'gsap'
+import type { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { site } from '../../content/site'
+import { scrollTo } from '../../lib/scroll'
+import styles from './ContactOverlay.module.css'
+
+// How far through the contact spacer the card counts as open (interactive).
+const OPEN_AT = 0.85
+
+/**
+ * Contact card that rises from below the viewport to its center as you scroll
+ * through the spacer at the end of the page, dimming the page behind it.
+ * Scrolling back up lowers it again.
+ */
+export function ContactOverlay() {
+  const scrimRef = useRef<HTMLDivElement>(null)
+  const cardRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<ScrollTrigger | null>(null)
+  const [open, setOpen] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    const scrim = scrimRef.current!
+    const card = cardRef.current!
+    const timeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#contact',
+        start: 'top bottom',
+        end: 'bottom bottom',
+        scrub: true,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => setOpen(self.progress >= OPEN_AT),
+      },
+    })
+    timeline
+      .fromTo(scrim, { autoAlpha: 0 }, { autoAlpha: 1, ease: 'none', duration: 1 }, 0)
+      // Arrives a little before the end of the page, so it rests at center.
+      .fromTo(
+        card,
+        { y: () => window.innerHeight / 2 + card.offsetHeight / 2 },
+        { y: 0, ease: 'power1.out', duration: 0.9 },
+        0,
+      )
+    triggerRef.current = timeline.scrollTrigger ?? null
+
+    return () => {
+      timeline.scrollTrigger?.kill()
+      timeline.kill()
+    }
+  }, [])
+
+  // Lower the card by scrolling back to where it starts rising (the end of About).
+  const close = () => {
+    if (triggerRef.current) scrollTo(triggerRef.current.start)
+  }
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') close()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
+
+  useEffect(() => {
+    if (!copied) return
+    const timer = setTimeout(() => setCopied(false), 1500)
+    return () => clearTimeout(timer)
+  }, [copied])
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(site.contact.email)
+      setCopied(true)
+    } catch {
+      window.location.href = `mailto:${site.contact.email}`
+    }
+  }
+
+  return (
+    <div className={styles.overlay} data-open={open}>
+      <div ref={scrimRef} className={styles.scrim} onClick={close} />
+      <div
+        ref={cardRef}
+        className={styles.card}
+        role="dialog"
+        aria-label="Contact"
+        aria-hidden={!open}
+        inert={!open}
+      >
+        <p className={styles.lead}>{site.contact.lead}</p>
+
+        <ul className={styles.links}>
+          <li>
+            <button type="button" className={styles.row} onClick={copyEmail}>
+              <span className={styles.label}>Email</span>
+              <span>{site.contact.email}</span>
+              <span className={styles.hint} aria-live="polite">
+                {copied ? 'copied' : 'copy'}
+              </span>
+            </button>
+          </li>
+          {site.contact.links.map(({ label, href }) => (
+            <li key={label}>
+              <a className={styles.row} href={href} target="_blank" rel="noreferrer">
+                <span className={styles.label}>{label}</span>
+                <span className={styles.hint} aria-hidden="true">
+                  ↗
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}

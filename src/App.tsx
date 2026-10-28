@@ -4,6 +4,7 @@ import { Cursor } from './components/chrome/Cursor'
 import { FixedTitle } from './components/chrome/FixedTitle'
 import { Header } from './components/chrome/Header'
 import { Nav } from './components/chrome/Nav'
+import { ContactOverlay } from './components/contact/ContactOverlay'
 import { Zones } from './components/dev/Zones'
 import { CornerMascot } from './components/mascot/CornerMascot'
 import { About } from './components/sections/About'
@@ -31,6 +32,7 @@ export function App() {
       <Nav />
       <FixedTitle />
       <BackToTop />
+      <ContactOverlay />
       <CornerMascot />
 
       {import.meta.env.DEV && <Zones />}

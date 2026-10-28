@@ -24,17 +24,26 @@ export function useActiveSection() {
 /** Watches the sections and updates the active one. Mount once, in App. */
 export function useTrackActiveSection() {
   useEffect(() => {
-    // A section is active while it covers the middle of the viewport.
-    const triggers = sections.map(({ id }) =>
-      ScrollTrigger.create({
-        trigger: `#${id}`,
-        start: 'top center',
-        end: 'bottom center',
-        onToggle: (self) => {
-          if (self.isActive) setActive(id)
-        },
-      }),
-    )
-    return () => triggers.forEach((trigger) => trigger.kill())
+    // The active section is the one covering the middle of the viewport. Checked on
+    // every scroll update rather than with enter/leave toggles, so jumps that skip
+    // sections (or land exactly on a boundary) still resolve to the right one.
+    const update = () => {
+      const middle = window.innerHeight / 2
+      for (const { id } of sections) {
+        const rect = document.getElementById(id)?.getBoundingClientRect()
+        if (rect && rect.top <= middle && rect.bottom > middle) {
+          setActive(id)
+          return
+        }
+      }
+    }
+    const trigger = ScrollTrigger.create({
+      start: 0,
+      end: 'max',
+      onUpdate: update,
+      onRefresh: update,
+    })
+    update()
+    return () => trigger.kill()
   }, [])
 }

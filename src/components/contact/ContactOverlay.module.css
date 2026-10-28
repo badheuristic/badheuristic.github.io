@@ -1,0 +1,86 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  pointer-events: none;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--scrim);
+  visibility: hidden;
+}
+
+.overlay[data-open='true'] .scrim,
+.overlay[data-open='true'] .card {
+  pointer-events: auto;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 3rem;
+  width: min(560px, 100%);
+  aspect-ratio: 1;
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+  background: var(--surface-alt);
+  color: var(--on-surface-alt);
+  will-change: transform;
+}
+
+.lead {
+  max-width: 20ch;
+  font-size: clamp(1.5rem, 1rem + 1.6vw, 2.25rem);
+  font-weight: var(--weight-light);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  width: 100%;
+  padding-block: 0.55rem;
+  text-align: left;
+  font-size: var(--text-base);
+}
+
+.label {
+  min-width: 6rem;
+  color: var(--on-surface-alt-muted);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.row:hover .label {
+  color: var(--on-surface-alt);
+}
+
+.hint {
+  margin-left: auto;
+  font-size: var(--text-sm);
+  color: var(--on-surface-alt-muted);
+}
+
+@media (max-width: 768px) {
+  .card {
+    aspect-ratio: auto;
+    min-height: min(100%, 420px);
+  }
+
+  .label {
+    min-width: 4.5rem;
+  }
+}

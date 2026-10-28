@@ -51,6 +51,7 @@ From back to front (z-order):
 4  fixed chrome            Logo (top left), Blog link + ThemeSwitch (top right),
                            Nav (right edge), BackToTop (bottom center)
 5  <ContactOverlay>        scrim + centered square card, rises from the bottom
+                           (under the fixed chrome, so the nav stays usable)
 6  <CornerMascot>          fixed bottom right once Home is scrolled past (above the overlay)
 7  <ChatOverlay>           later: opened by clicking the mascot
 ```
@@ -71,7 +72,7 @@ From back to front (z-order):
 |---|---|---|
 | Smooth scroll | Inertial page scroll. Anchor links glide. | Lenis, one shared instance in `lib/scroll.ts`, driving GSAP ScrollTrigger |
 | Cursor | A dot at the pointer with a larger, fainter circle easing behind it. Mouse devices only. | `Cursor.tsx`, one `requestAnimationFrame` loop |
-| Active section | Each section reports when it is the main one in view. Drives everything below. | ScrollTrigger callbacks feeding a tiny store (`useActiveSection`) |
+| Active section | The section covering the middle of the viewport. Drives everything below. | Checked on every ScrollTrigger update, feeding a tiny store (`useActiveSection`) |
 | Nav | Small text list (Home, Projects, About, Contact), fixed to the right edge on every section. The active item has a filled square highlight. To move, it stretches to cover the next item, then lets go of the old one: a square take on the mockup's gooey pill, since a goo filter would round the corners. | GSAP timeline for the stretch |
 | FixedTitle | Fixed bottom left, **behind** the content, so sections scroll over it. Shows "hello, i am / stephen" on Home, then "projects", "about", "contact". On a section change the old lines drop out of the bottom edge of the viewport and the new ones rise in from there. | `position: fixed` at `--z-backdrop`, text keyed on active section, GSAP |
 | BackToTop | Hidden on Home, visible elsewhere. Scrolls to top through Lenis. | |
@@ -246,7 +247,7 @@ Each step leaves a working site.
 3. ✅ **Navigation.** Active-section tracking, nav rail with sliding highlight,
    FixedTitle changes, BackToTop, mascot placement (Home center, corner peek and pop)
    with a placeholder.
-4. **Home + Contact.** Real copy, display typography, contact card rising to center.
+4. ✅ **Home + Contact.** Real copy, display typography, contact card rising to center.
 5. **About.** Skill marquees, experience list, images.
 6. **Projects.** Pinned, scroll-driven stack and detail panel.
 7. **Particles.** Background field with parallax.

@@ -9,4 +9,14 @@ export const site = {
   links: {
     blog: '#',
   },
+  // Placeholder contact details until the mechanics are done.
+  contact: {
+    lead: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    email: 'hello@example.com',
+    links: [
+      { label: 'GitHub', href: '#' },
+      { label: 'LinkedIn', href: '#' },
+      { label: 'Resume', href: '#' },
+    ],
+  },
 }
