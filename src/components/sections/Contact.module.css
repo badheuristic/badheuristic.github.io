@@ -1,22 +1,12 @@
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-overlay);
+/* The last section: one screen tall, with the contact card at its center. */
+.contact {
   display: grid;
   place-items: center;
+  height: 100dvh;
   padding: var(--gutter);
-  pointer-events: none;
 }
 
-.scrim {
-  position: absolute;
-  inset: 0;
-  background: var(--scrim);
-  visibility: hidden;
-}
-
-.overlay[data-open='true'] .scrim,
-.overlay[data-open='true'] .card {
+.card {
   pointer-events: auto;
 }
 
@@ -29,7 +19,6 @@
   padding-block: 0.75rem;
   background: var(--surface-alt);
   color: var(--on-surface-alt);
-  will-change: transform;
 }
 
 /* The rows split the square's height evenly and span its width, as does their hover fill. */
@@ -86,6 +75,6 @@
 @media (max-width: 1023px), (max-height: 500px) {
   .card {
     aspect-ratio: auto;
-    height: min(360px, 100%);
+    height: min(360px, 70dvh);
   }
 }

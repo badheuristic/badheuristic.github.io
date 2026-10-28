@@ -75,8 +75,7 @@ a {
 }
 
 /* Touch devices scroll natively (lib/scroll.ts skips Lenis there), with no snapping:
-   sections are a screen tall, so any snapping feels like stepping. ContactOverlay settles
-   a half-raised contact card instead. Nav links glide natively. */
+   sections are a screen tall, so any snapping feels like stepping. Nav links glide natively. */
 @media (hover: none) and (pointer: coarse) and (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;

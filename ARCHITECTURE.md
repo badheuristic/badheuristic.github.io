@@ -1,7 +1,7 @@
 # Site architecture
 
-A one-page personal site: minimal, monotone, smooth. Three scrolling sections (Home,
-Projects, About) and a Contact overlay that rises over the end of the page. Fixed chrome
+A one-page personal site: minimal, monotone, smooth. Four scrolling sections (Home,
+Projects, About, Contact). Fixed chrome
 (logo, nav, theme switch, large section title, back to top) sits on top of the scrolling
 content, with a particle field behind it and a small interactive 3D mascot in the
 bottom-right corner.
@@ -30,8 +30,7 @@ reference for the projects stack. Mascot details: `MODELSPEC.md`.
   | `--fg-muted`   | `#7a7a7a` | `#bdbdbd` | nav items, dates                     |
   | `--fg-faint`   | `#dcdcdc` | `#3a3a3a` | fixed section title, "hello, i am"   |
   | `--surface`    | `#d9d9d9` | `#dcdcdc` | active nav fill, placeholders, tiles |
-  | `--surface-alt`| `#636363` | `#111111` | contact overlay card                 |
-  | `--scrim`      | `bg` @ ~60% alpha         | behind the contact card              |
+  | `--surface-alt`| `#636363` | `#111111` | contact card                         |
   | `--particle`   | `fg` @ low alpha          | squares in the background            |
 
 - **Type.** Iosevka Aile for all text, mostly the Light weight (300), with Regular and
@@ -49,13 +48,11 @@ From back to front (z-order):
 1  <Particles>             fixed full-viewport canvas, pointer-events: none
 2  <FixedTitle>            fixed bottom left, behind the content
 3  <main> sections         Home (with the mascot at its center) / Projects (pinned) /
-                           About, normal document flow
+                           About / Contact, normal document flow
 4  fixed chrome            Logo (top left), Blog link + ThemeSwitch (top right),
                            Nav (right edge)
-5  <ContactOverlay>        scrim + centered square card, rises from the bottom
-                           (under the fixed chrome, so the nav stays usable)
-6  <CornerMascot>          fixed bottom right once Home is scrolled past (above the overlay)
-7  <ChatOverlay>           later: opened by clicking the mascot
+5  <CornerMascot>          fixed bottom right once Home is scrolled past
+6  <ChatOverlay>           later: opened by clicking the mascot
 ```
 
 **Reserved zones.** Fixed elements take up corners, so section content is kept out of them:
@@ -73,7 +70,7 @@ From back to front (z-order):
 | Feature | Behavior | Implementation |
 |---|---|---|
 | Intro hand-off | Home's intro stays fixed as you scroll on, dimmed outside Home. About's lead is the same text: when it scrolls up to the intro, the intro lights up and rides along with About, as if the paragraph moved into About. | One fixed copy (`intro/FixedIntro.tsx`) positioned each frame from two invisible slots (Home's intro, About's lead), which keep the layout and the text for screen readers. It publishes `--intro-band` so Projects keeps clear of it. |
-| Section scrolling | One gesture (wheel flick, swipe, arrow/page key) glides to the next or previous section, like clicking it in the nav, so you never stop halfway (e.g. with the contact card half up). Sections taller than the viewport (About) scroll freely inside; the gesture that reaches their edge stops there and the next one moves on; a gesture that starts within 15% of a screen of the edge goes straight on. Free scrolling inside runs at 1.4× wheel speed. Home/End jump to the ends. Nav links and closing the contact card use the same glide (0.5s, ease in-out). | Lenis's `virtualScroll` hook (`lib/sectionSnap.ts`) claims gestures and snaps with `scrollTo`; a 180ms pause between wheel events, a change of direction, or a jump in wheel speed (a fresh flick over a fading inertia tail) starts a new gesture, so trackpad inertia can't skip sections but a new flick isn't swallowed. Lenis runs on GSAP's ticker. |
+| Section scrolling | One gesture (wheel flick, swipe, arrow/page key) glides to the next or previous section, like clicking it in the nav, so you never stop halfway (e.g. halfway into Contact). Sections taller than the viewport (About) scroll freely inside; the gesture that reaches their edge stops there and the next one moves on; a gesture that starts within 15% of a screen of the edge goes straight on. Free scrolling inside runs at 1.4× wheel speed. Home/End jump to the ends. Nav links use the same glide (0.5s, ease in-out). | Lenis's `virtualScroll` hook (`lib/sectionSnap.ts`) claims gestures and snaps with `scrollTo`; a 180ms pause between wheel events, a change of direction, or a jump in wheel speed (a fresh flick over a fading inertia tail) starts a new gesture, so trackpad inertia can't skip sections but a new flick isn't swallowed. Lenis runs on GSAP's ticker. |
 | Cursor | A dot at the pointer with a larger, fainter circle easing behind it. Mouse devices only. | `Cursor.tsx`, one `requestAnimationFrame` loop |
 | Active section | Switches as soon as the next section peeks in: the section covering a line 15% in from the edge you're scrolling toward (near the bottom scrolling down, near the top scrolling up). Drives everything below. | Checked on every ScrollTrigger update, feeding a tiny store (`useActiveSection`) |
 | Nav | Small text list (Home, Projects, About, Contact), fixed to the right edge on every section. The active item has a filled square highlight. To move, it stretches to cover the next item, then lets go of the old one: a square take on the mockup's gooey pill, since a goo filter would round the corners. | GSAP timeline for the stretch |
@@ -123,18 +120,13 @@ From back to front (z-order):
 - Right column: lead paragraph, body paragraph, two images, then an experience list
   (role, date range, description). Data lives in `content/experience.ts`.
 
-### Contact (`#contact`), overlay
-- Not a full section. It's a **square card** (about `min(560px, 80vw)` wide) that
-  **rises from the bottom of the screen and stops at the center**, over a scrim that
-  dims the page behind it.
-- **Scroll-driven at the end of the page.** A short spacer after About (about 100vh)
-  gives it room. Scroll progress through the spacer moves the card from below the
-  viewport to the center and fades the scrim in. Scrolling back up lowers it again.
-- The Contact nav item and any "contact" links scroll to the end of that spacer, so the
-  card arrives the same way.
-- No title. The card holds only the links, as a moderate-size list centered in the
-  near-black square: Email (copies on click), GitHub, LinkedIn, Resume, X.
-- `Esc` or clicking the scrim scrolls back to About.
+### Contact (`#contact`)
+- A normal, screen-tall section, last on the page, like the others. It scrolls in and
+  steps the same way. (It used to be a scroll-driven overlay rising over a spacer, which
+  was fragile, especially with native touch scrolling.)
+- A **square card** (`min(400px, 100%)`) at the center of the section, in
+  `--surface-alt`. No title. It holds only the links, as a list that splits the
+  square's height evenly: Email (copies on click), GitHub, LinkedIn, Resume, X.
 
 ## Mascot (`MODELSPEC.md`)
 
@@ -190,8 +182,7 @@ Below 1024px wide (phones, tablets in portrait) or 500px tall (phones in landsca
   slides under them.
 - **Scrolling:** touch-first devices scroll natively (momentum, rubber-banding), with no
   stepping and no snapping (with screen-tall sections, any snapping feels like stepping).
-  Once scrolling stops with no finger down, a half-raised contact card settles open or
-  closed, whichever is nearer. Nav links glide with native smooth scrolling. Lenis and
+  Nav links glide with native smooth scrolling. Lenis and
   stepping stay for mouse and trackpad.
 - **ThemeSwitch:** stays in the top right as `light / dark`.
 - **FixedTitle:** stays fixed bottom left, scaled with `clamp()`. Content gets bottom
@@ -204,7 +195,7 @@ Below 1024px wide (phones, tablets in portrait) or 500px tall (phones in landsca
 - **Projects:** stack on top (smaller card, three cards behind instead of five), details
   below. The section grows past one screen when it needs to, and scrolls inside.
 - **About:** marquees go full width above the text column.
-- **Contact card:** full width minus the page margin, still rises to center.
+- **Contact card:** full width minus the page margin, centered in its section.
 - **Particles:** fewer of them (density scales with screen area).
 - Checked at 390×844 (phone), 820×1180 (tablet portrait) and 844×390 (phone landscape),
   including swipes (one swipe, one section), free scrolling in About, sideways drags on
@@ -245,8 +236,7 @@ src/
     useReducedMotion.ts
   components/
     chrome/                Logo, ThemeSwitch, ThemeDissolve, Nav, FixedTitle, Cursor
-    sections/              Home, Projects, About
-    contact/               ContactOverlay
+    sections/              Home, Projects, About, Contact
     projects/              ProjectStack, ProjectCard, ProjectDetail
     about/                 SkillMarquee, ExperienceList
     background/            Particles
@@ -268,7 +258,7 @@ Each step leaves a working site.
 3. ✅ **Navigation.** Active-section tracking, nav rail with sliding highlight,
    FixedTitle changes, mascot placement (Home center, corner peek and pop)
    with a placeholder.
-4. ✅ **Home + Contact.** Real copy, display typography, contact card rising to center.
+4. ✅ **Home + Contact.** Real copy, display typography, contact card.
 5. ✅ **About.** Skill marquees, experience list, images.
 6. ✅ **Projects.** Pinned, scroll-driven stack and detail panel.
 7. ✅ **Particles.** Background field with parallax.

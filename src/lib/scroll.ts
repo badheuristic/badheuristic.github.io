@@ -87,8 +87,3 @@ export function scrollTo(target: number | string | HTMLElement) {
     el?.scrollIntoView({ behavior })
   }
 }
-
-/** True when the page scrolls natively (touch devices, reduced motion): no Lenis, no stepping. */
-export function isNativeScroll() {
-  return lenis === null
-}

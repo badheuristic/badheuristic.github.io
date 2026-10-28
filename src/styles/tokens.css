@@ -14,7 +14,6 @@
   --on-surface-alt: #f5f5f5;
   --on-surface-alt-muted: rgb(245 245 245 / 0.55);
   --surface-alt-hover: rgb(255 255 255 / 0.08);
-  --scrim: rgb(255 255 255 / 0.6);
   --particle: rgb(0 0 0 / 0.22);
   --mascot: #1c1c1c;
   --mascot-ink: #f5f5f5;
@@ -57,7 +56,6 @@
   --z-particles: 0;
   --z-backdrop: 1; /* fixed section title: in front of particles, behind content */
   --z-content: 2;
-  --z-overlay: 3; /* contact card + scrim: over content, under the header and nav */
   --z-chrome: 4;
   --z-mascot: 5;
   --z-chat: 6;
@@ -75,7 +73,6 @@
   --surface: #dcdcdc;
   --surface-alt: #303030;
   --surface-alt-hover: rgb(255 255 255 / 0.1);
-  --scrim: rgb(34 34 34 / 0.6);
   --particle: rgb(255 255 255 / 0.12);
   --mascot: #e6e6e6;
   --mascot-ink: #111111;
