@@ -1,0 +1,46 @@
+/* Applied to <html> while the custom cursor is active. */
+:global(html).hideNative,
+:global(html).hideNative * {
+  cursor: none !important;
+}
+
+.dot,
+.trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  pointer-events: none;
+  /* The one exception to the no-rounded-corners rule. */
+  border-radius: 50%;
+  background: var(--fg);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease-out);
+  will-change: transform;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+}
+
+.trail {
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+}
+
+.dot[data-visible='true'] {
+  opacity: 1;
+}
+
+.trail[data-visible='true'] {
+  opacity: 0.15;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trail {
+    display: none;
+  }
+}

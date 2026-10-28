@@ -2,7 +2,7 @@
   display: flex;
   align-items: baseline;
   font-size: var(--text-sm);
-  font-weight: 600;
+  font-weight: var(--weight-regular);
 }
 
 .item {

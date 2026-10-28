@@ -1,3 +1,4 @@
+import { Cursor } from './components/chrome/Cursor'
 import { Logo } from './components/chrome/Logo'
 import { Name } from './components/chrome/Name'
 import { ThemeSwitch } from './components/chrome/ThemeSwitch'
@@ -27,6 +28,8 @@ export function App() {
           </span>
         </h1>
       </main>
+
+      <Cursor />
     </>
   )
 }

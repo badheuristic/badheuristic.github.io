@@ -16,7 +16,7 @@
 
 .blog {
   font-size: var(--text-sm);
-  font-weight: 600;
+  font-weight: var(--weight-regular);
 }
 
 .main {
@@ -33,7 +33,7 @@
   grid-column: 2;
   max-width: 42ch;
   padding-bottom: 2rem;
-  font-weight: 600;
+  font-weight: var(--weight-regular);
 }
 
 .title {
@@ -42,13 +42,15 @@
   display: flex;
   flex-direction: column;
   font-size: var(--text-display);
-  font-weight: 700;
+  font-weight: var(--weight-light);
   letter-spacing: var(--tracking-display);
   line-height: var(--leading-display);
 }
 
 .greeting {
   font-size: 0.6em;
+  /* Smaller line, so it needs looser tracking than the name below. */
+  letter-spacing: 0;
   color: var(--fg-faint);
 }
 
