@@ -14,8 +14,8 @@ const MARGIN = 20
 
 type Particle = { x: number; y: number; vx: number; vy: number; depth: number; size: number }
 
-function createParticles(width: number, height: number): Particle[] {
-  return Array.from({ length: Math.round((width * height) / AREA_PER_PARTICLE) }, () => {
+function createParticles(count: number, width: number, height: number): Particle[] {
+  return Array.from({ length: count }, () => {
     // Skewed toward deep, so most squares are small and faint and a few stand out.
     const depth = 0.15 + 0.85 * Math.random() ** 2
     const angle = Math.random() * Math.PI * 2
@@ -60,7 +60,13 @@ export function Particles() {
       canvas.width = Math.round(width * dpr)
       canvas.height = Math.round(height * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      particles = createParticles(width, height)
+      // Keeps the squares it has (mobile address bars resize the window as you scroll, which
+      // would otherwise reshuffle the field); only adds or drops some to match the new area.
+      const count = Math.round((width * height) / AREA_PER_PARTICLE)
+      particles =
+        count > particles.length
+          ? particles.concat(createParticles(count - particles.length, width, height))
+          : particles.slice(0, count)
     }
 
     const draw = () => {
