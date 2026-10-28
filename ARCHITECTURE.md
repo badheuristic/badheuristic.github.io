@@ -256,7 +256,7 @@ Each step leaves a working site.
 5. ✅ **About.** Skill marquees, experience list, images.
 6. ✅ **Projects.** Pinned, scroll-driven stack and detail panel.
 7. ✅ **Particles.** Background field with parallax.
-8. ✅ **heme dissolve.** Square-tile transition between themes.
+8. ✅ **Theme dissolve.** Square-tile transition between themes.
 9. **Mascot.** Head, face canvas, states and blending, bubble, hover and click.
 10. **Mobile + polish.** Responsive layout, accessibility, reduced motion, performance,
     deploy.
