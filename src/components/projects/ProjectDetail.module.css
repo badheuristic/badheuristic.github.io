@@ -1,0 +1,31 @@
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-width: 46ch;
+}
+
+.title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-regular);
+}
+
+.year {
+  color: var(--fg-muted);
+}
+
+.links {
+  display: flex;
+  gap: 1.25rem;
+  list-style: none;
+}
+
+.link {
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.link:hover {
+  color: var(--fg);
+}

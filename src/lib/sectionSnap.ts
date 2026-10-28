@@ -32,7 +32,12 @@ function layout(lenis: Lenis) {
     const start = el.getBoundingClientRect().top + lenis.animatedScroll
     const end = start + el.offsetHeight - vh
     stops.push(Math.min(start, lenis.limit))
-    if (end - start > FREE_ZONE_MIN_PX) {
+    // A section with `data-snap-steps="n"` (the pinned project stack) snaps through n
+    // evenly spaced stops instead of scrolling freely.
+    const steps = Number(el.dataset.snapSteps)
+    if (steps > 1) {
+      for (let k = 1; k < steps; k++) stops.push(Math.min(start + ((end - start) * k) / (steps - 1), lenis.limit))
+    } else if (end - start > FREE_ZONE_MIN_PX) {
       // Tall section: stop at both its top and its bottom, scroll freely between.
       zones.push({ start, end })
       stops.push(Math.min(end, lenis.limit))

@@ -1,62 +1,20 @@
+/* One viewport, plus this much scrolling per extra card. */
 .projects {
+  --step: 70vh;
+
+  position: relative;
+  height: calc(100dvh + (var(--cards) - 1) * var(--step));
+}
+
+/* Stays in view while the section scrolls past. */
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 3rem;
-}
-
-.stage {
-  position: relative;
-  display: grid;
-  justify-items: center;
-  padding-inline: var(--gutter);
+  gap: 2.5rem;
   padding-right: calc(var(--zone-rail-w) + var(--gutter));
-}
-
-.stack {
-  display: flex;
-  gap: 1rem;
-  list-style: none;
-}
-
-.card {
-  display: flex;
-  align-items: flex-end;
-  width: clamp(6rem, 12vw, 12rem);
-  aspect-ratio: 1;
-  padding: 0.75rem;
-  background: var(--surface);
-  color: var(--on-surface);
-}
-
-.cardLabel {
-  font-size: var(--text-xs);
-}
-
-.shadow {
-  width: 80%;
-  height: 2.5rem;
-  margin-top: 3rem;
-  background: radial-gradient(closest-side, rgb(0 0 0 / 0.25), transparent);
-  filter: blur(6px);
-}
-
-.detail {
-  max-width: 46ch;
-}
-
-.title {
-  font-size: var(--text-lg);
-  font-weight: var(--weight-regular);
-}
-
-.year {
-  color: var(--fg-muted);
-}
-
-@media (max-width: 768px) {
-  .stack {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+  overflow: hidden;
 }

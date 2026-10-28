@@ -94,14 +94,17 @@ From back to front (z-order):
 - **Project stack** in place of the carousel in the mockup (see `stack.png`). The active
   card is large in front. The other cards recede into depth to the right, smaller and
   overlapping.
-- **Scroll-driven.** The section pins while scrolling moves through the stack. The pin
-  lasts roughly `cards × 60vh`. Scroll progress maps to a fractional `activeIndex`, so
-  cards move continuously between positions instead of jumping. A light snap settles on
-  whole cards when scrolling stops.
-  - Each card's transform (`translate3d`, `rotateY`, scale, opacity) is worked out from
-    `index - activeIndex`, using CSS 3D with `perspective`.
-  - Clicking a card or pressing the arrow keys scrolls the page to that card's point in
-    the pin, so the scroll position and the stack never disagree.
+- **Scroll-driven.** The section is one viewport tall plus 70vh per extra card, and its
+  stage is `position: sticky`, so it stays put while scrolling moves through the cards.
+  Scroll progress maps to a fractional current card, so cards move continuously between
+  positions. Section snapping (`data-snap-steps`) puts a stop on every card: one gesture,
+  one card; after the last card the next gesture goes on to About.
+  - Each card's pose (x offset, depth, `rotateY`, opacity, depth fog) is worked out from
+    `index - current`. Cards share one `perspective` and are layered by z-index rather
+    than `preserve-3d` depth sorting, which browsers don't apply consistently. Passed
+    cards slide off to the left toward the viewer and fade.
+  - Clicking a card or pressing Left/Right glides the page to that card's stop, so the
+    scroll position and the stack never disagree.
   - Soft ellipse shadow under the stack (it's in the mockup and is not a border, so it
     stays).
 - Detail text for the active project (title, year, blurb, links), where the mockup's
@@ -250,7 +253,7 @@ Each step leaves a working site.
    with a placeholder.
 4. ✅ **Home + Contact.** Real copy, display typography, contact card rising to center.
 5. ✅ **About.** Skill marquees, experience list, images.
-6. **Projects.** Pinned, scroll-driven stack and detail panel.
+6. ✅ **Projects.** Pinned, scroll-driven stack and detail panel.
 7. **Particles.** Background field with parallax.
 8. **Theme dissolve.** Square-tile transition between themes.
 9. **Mascot.** Head, face canvas, states and blending, bubble, hover and click.
