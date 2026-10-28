@@ -12,7 +12,7 @@ const KEY_STEP_PX = 120
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2)
 
 /** How every section-to-section move glides: scroll gestures, nav links, closing contact. */
-export const GLIDE = { duration: 0.4, easing: easeInOutCubic, lock: true }
+export const GLIDE = { duration: 0.5, easing: easeInOutCubic, lock: true }
 
 type Zone = { start: number; end: number }
 
