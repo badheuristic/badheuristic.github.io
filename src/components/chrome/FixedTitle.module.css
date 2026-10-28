@@ -30,6 +30,11 @@
   color: var(--fg-faint);
 }
 
+/* Section titles (not Home's greeting) sit behind running text, so they're fainter. */
+.title:not([data-section='home']) .faint {
+  color: var(--title-faint);
+}
+
 @media (max-width: 1023px), (max-height: 500px) {
   .title {
     font-size: clamp(2.5rem, 14vw, 4rem);

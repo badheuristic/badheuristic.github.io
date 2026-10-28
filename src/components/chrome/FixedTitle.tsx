@@ -83,7 +83,7 @@ export function FixedTitle() {
   }, [shown, reducedMotion])
 
   return (
-    <div ref={ref} className={styles.title} aria-hidden="true">
+    <div ref={ref} className={styles.title} data-section={current} aria-hidden="true">
       {TITLES[current].map((line, i) => (
         <span
           key={`${current}-${i}`}

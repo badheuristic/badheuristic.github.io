@@ -73,3 +73,23 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Touch devices scroll natively (lib/scroll.ts skips Lenis there). Proximity snapping lets
+   a scroll that ends near a section's start settle on it, so the contact card can't be
+   left half open, without forcing section-by-section steps. Nav links glide natively. */
+@media (hover: none) and (pointer: coarse) {
+  html {
+    scroll-snap-type: y proximity;
+    scroll-behavior: smooth;
+  }
+
+  main > section {
+    scroll-snap-align: start;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) and (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

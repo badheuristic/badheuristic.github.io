@@ -6,6 +6,8 @@
   --fg: #000000;
   --fg-muted: #7a7a7a;
   --fg-faint: #dcdcdc;
+  /* Section titles behind the content: fainter still, so text over them stays readable. */
+  --title-faint: #ededed;
   --surface: #d9d9d9;
   --surface-alt: #1c1c1c;
   --on-surface: #000000;
@@ -69,6 +71,7 @@
   --fg: #ffffff;
   --fg-muted: #bdbdbd;
   --fg-faint: #3a3a3a;
+  --title-faint: #2d2d2d;
   --surface: #dcdcdc;
   --surface-alt: #303030;
   --surface-alt-hover: rgb(255 255 255 / 0.1);

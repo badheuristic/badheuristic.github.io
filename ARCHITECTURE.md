@@ -188,6 +188,10 @@ Below 1024px wide (phones, tablets in portrait) or 500px tall (phones in landsca
 - **Nav:** a compact row under the logo, with the same sliding highlight. The header and
   nav sit on a page-colored strip that fades out at the bottom, so content scrolling up
   slides under them.
+- **Scrolling:** touch-first devices scroll natively (momentum, rubber-banding), with no
+  section stepping. CSS `scroll-snap-type: y proximity` on section starts lets a scroll
+  that ends near a section settle on it, so the contact card can't stay half open. Nav
+  links glide with native smooth scrolling. Lenis and stepping stay for mouse and trackpad.
 - **ThemeSwitch:** stays in the top right as `light / dark`.
 - **FixedTitle:** stays fixed bottom left, scaled with `clamp()`. Content gets bottom
   padding to match. Hidden on screens under 500px tall, where there's no room for it.

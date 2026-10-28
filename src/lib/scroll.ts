@@ -9,14 +9,19 @@ gsap.registerPlugin(ScrollTrigger)
 
 let lenis: Lenis | null = null
 
+// Touch-first devices (phones, tablets) keep native scrolling: momentum and rubber-banding
+// as people expect, with gentle CSS snapping (global.css) instead of section stepping.
+const TOUCH = '(hover: none) and (pointer: coarse)'
+const smooth = () => !matchMedia('(prefers-reduced-motion: reduce)').matches
+
 /**
  * Starts smooth, section-to-section scrolling for the page (see sectionSnap.ts),
- * driven by GSAP's ticker so ScrollTrigger stays in sync with it. Skipped when the
- * visitor prefers reduced motion; everything then falls back to native scrolling.
+ * driven by GSAP's ticker so ScrollTrigger stays in sync with it. Skipped on touch
+ * devices and when the visitor prefers reduced motion; those keep native scrolling.
  * Returns a cleanup function.
  */
 export function initScroll() {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return () => {}
+  if (!smooth() || matchMedia(TOUCH).matches) return () => {}
 
   const snap = createSectionSnap(() => lenis)
   // `syncTouch` routes swipes through Lenis too, so they snap like the wheel.
@@ -74,10 +79,11 @@ export function scrollTo(target: number | string | HTMLElement) {
     lenis.scrollTo(target, GLIDE)
     return
   }
+  const behavior = smooth() ? 'smooth' : 'auto'
   if (typeof target === 'number') {
-    window.scrollTo({ top: target })
+    window.scrollTo({ top: target, behavior })
   } else {
     const el = typeof target === 'string' ? document.querySelector(target) : target
-    el?.scrollIntoView()
+    el?.scrollIntoView({ behavior })
   }
 }
