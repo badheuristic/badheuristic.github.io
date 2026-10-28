@@ -32,8 +32,10 @@ reference for the projects stack. Mascot details: `MODELSPEC.md`.
   | `--scrim`      | `bg` @ ~60% alpha         | behind the contact card              |
   | `--particle`   | `fg` @ low alpha          | squares in the background            |
 
-- **Type.** One family (Inter, variable). Display sizes (`stephen`, section titles) are
-  heavy weight with tight negative tracking. Body is regular or medium.
+- **Type.** Iosevka Aile for all text, mostly the Light weight (300), with Regular and
+  Medium for small UI text. Display sizes (`stephen`, section titles) use slightly tight
+  tracking. Standard (monospace) Iosevka is reserved for code, such as on the blog
+  (`--font-code`).
 - **Logo** is the text mark `ch{✱}` in place of the mockups' `c3k`.
 
 ## Layout and layers
@@ -66,8 +68,9 @@ From back to front (z-order):
 | Feature | Behavior | Implementation |
 |---|---|---|
 | Smooth scroll | Inertial page scroll. Anchor links glide. | Lenis, one shared instance in `lib/scroll.ts`, driving GSAP ScrollTrigger |
+| Cursor | A dot at the pointer with a larger, fainter circle easing behind it. Mouse devices only. | `Cursor.tsx`, one `requestAnimationFrame` loop |
 | Active section | Each section reports when it is the main one in view. Drives everything below. | ScrollTrigger callbacks feeding a tiny store (`useActiveSection`) |
-| Nav | Small text list (Home, Projects, About, Contact). **On Home:** centered. **After Home:** glides to a right-hand rail at the same size. The active item has a filled highlight that slides (and stretches like goo) between items. | GSAP Flip for the move between positions, SVG goo filter for the highlight |
+| Nav | Small text list (Home, Projects, About, Contact). **At the top of Home:** centered. **After about a quarter-screen of scrolling:** glides to a right-hand rail at the same size, before it can float over Projects. The active item has a filled square highlight. To move, it stretches to cover the next item, then lets go of the old one: a square take on the mockup's gooey pill, since a goo filter would round the corners. | GSAP Flip for the move between positions, a GSAP timeline for the stretch |
 | FixedTitle | Fixed bottom left. Shows "hello, i am / stephen" on Home, then "projects", "about", "contact". Text changes with a slide or fade when the section changes. | `position: fixed`, text keyed on active section |
 | BackToTop | Hidden on Home, visible elsewhere. Scrolls to top through Lenis. | |
 | ThemeSwitch | A text toggle in the top right next to Blog: `light / dark`, with the current theme at full contrast and the other muted. Easy to read, and it fits the type-led look. Switching runs a **square-tile dissolve**: a grid of squares flips from the clicked point outward, revealing the new theme (the same square motif as the particles). The mascot reacts briefly (squints going light, sleepy face going dark). Starts from `prefers-color-scheme` and is saved in localStorage. | `data-theme` on `<html>` swaps the tokens. The dissolve is a short-lived canvas over everything, or the View Transitions API with a mask. Particles and mascot read the tokens too. |
@@ -230,11 +233,11 @@ public/
 
 Each step leaves a working site.
 
-1. **Scaffold.** Vite/React/TS, tokens, fonts, global styles, ThemeSwitch (plain swap
+1. ✅ **Scaffold.** Vite/React/TS, tokens, fonts, global styles, ThemeSwitch (plain swap
    for now).
-2. **Skeleton.** Home, Projects and About with placeholder content, the contact spacer,
+2. ✅ **Skeleton.** Home, Projects and About with placeholder content, the contact spacer,
    fixed chrome in place, reserved zones visible while developing, Lenis scrolling.
-3. **Navigation.** Active-section tracking, Nav moving from center to rail, sliding
+3. ✅ **Navigation.** Active-section tracking, Nav moving from center to rail, sliding
    highlight, FixedTitle changes, BackToTop.
 4. **Home + Contact.** Real copy, display typography, contact card rising to center.
 5. **About.** Skill marquees, experience list, images.

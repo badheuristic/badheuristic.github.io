@@ -11,7 +11,10 @@
 }
 
 .star {
-  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  margin-inline: 0.1em;
+  align-self: center;
   transition: transform 600ms var(--ease-out);
 }
 

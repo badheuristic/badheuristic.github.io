@@ -12,6 +12,15 @@
   color: var(--on-surface);
   font-size: var(--text-xs);
   font-weight: var(--weight-regular);
+  transition:
+    opacity var(--dur) var(--ease-out),
+    translate var(--dur) var(--ease-out);
+}
+
+.button[data-hidden='true'] {
+  opacity: 0;
+  translate: -50% 100%;
+  pointer-events: none;
 }
 
 .arrow {

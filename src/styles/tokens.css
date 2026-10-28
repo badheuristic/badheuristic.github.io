@@ -13,7 +13,9 @@
   --particle: rgb(0 0 0 / 0.12);
 
   /* Type */
-  --font: 'Iosevka', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --font: 'Iosevka Aile', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Standard Iosevka is reserved for code (blog later). Import @fontsource/iosevka where it's used. */
+  --font-code: 'Iosevka', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
   --weight-light: 300;
   --weight-regular: 400;
   --weight-medium: 500;

@@ -9,11 +9,13 @@ import { About } from './components/sections/About'
 import { ContactSpacer } from './components/sections/ContactSpacer'
 import { Home } from './components/sections/Home'
 import { Projects } from './components/sections/Projects'
+import { useTrackActiveSection } from './hooks/useActiveSection'
 import { initScroll } from './lib/scroll'
 import styles from './App.module.css'
 
 export function App() {
   useEffect(() => initScroll(), [])
+  useTrackActiveSection()
 
   return (
     <>

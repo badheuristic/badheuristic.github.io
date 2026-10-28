@@ -10,14 +10,30 @@
   font-weight: var(--weight-light);
   letter-spacing: var(--tracking-display);
   line-height: var(--leading-display);
+  white-space: nowrap;
   pointer-events: none;
   user-select: none;
 }
 
-.greeting {
+/* Clips each line as it slides. The padding leaves room for descenders (p, j). */
+.mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
+}
+
+.line {
+  display: block;
+}
+
+.small {
   font-size: 0.6em;
   /* Smaller line, so it needs looser tracking than the name below. */
   letter-spacing: 0;
+}
+
+.faint {
   color: var(--fg-faint);
 }
 
