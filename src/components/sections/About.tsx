@@ -1,21 +1,22 @@
 import { about, experience, skills } from '../../content/about'
+import { SkillMarquee } from '../about/SkillMarquee'
 import layout from './Section.module.css'
 import styles from './About.module.css'
 
-// Placeholder layout. The skill rows become opposite-direction marquees in step 5.
 export function About() {
   return (
     <section id="about" className={`${layout.section} ${styles.about}`} aria-label="About">
-      <div className={styles.skills} aria-hidden="true">
-        {skills.map((row, i) => (
-          <div key={i} className={styles.row}>
-            {row.map((skill) => (
-              <span key={skill} className={styles.tile}>
-                {skill}
-              </span>
-            ))}
-          </div>
-        ))}
+      <div className={styles.skills}>
+        <div className={styles.rows} aria-hidden="true">
+          {skills.map((row, i) => (
+            <SkillMarquee key={i} skills={row} direction={i % 2 === 0 ? 'left' : 'right'} />
+          ))}
+        </div>
+        <ul className={styles.srOnly} aria-label="Skills">
+          {skills.flat().map(({ name }) => (
+            <li key={name}>{name}</li>
+          ))}
+        </ul>
       </div>
 
       <div className={`${layout.column} ${styles.content}`}>

@@ -1,0 +1,60 @@
+.marquee {
+  --tile: 4rem;
+  --gap: 2rem;
+  /* Time for one full row to pass; both rows share it so they move at the same speed. */
+  --duration: 36s;
+
+  overflow: hidden;
+  /* Fade the ends instead of cutting tiles off hard. */
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: scroll var(--duration) linear infinite;
+}
+
+.marquee[data-direction='right'] .track {
+  animation-direction: reverse;
+}
+
+.marquee:hover .track {
+  animation-play-state: paused;
+}
+
+/* Margin rather than flex gap, so half the track is exactly one set of tiles plus gaps. */
+.tile {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--tile);
+  aspect-ratio: 1;
+  margin-right: var(--gap);
+  background: var(--surface);
+  color: var(--on-surface);
+}
+
+.icon {
+  width: 45%;
+  fill: currentColor;
+}
+
+@keyframes scroll {
+  to {
+    translate: -50% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .marquee {
+    --tile: 3rem;
+    --gap: 1.25rem;
+  }
+}

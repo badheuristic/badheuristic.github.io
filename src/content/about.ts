@@ -1,3 +1,23 @@
+import {
+  siBun,
+  siDocker,
+  siFigma,
+  siGit,
+  siGo,
+  siGreensock,
+  siLinux,
+  siNeovim,
+  siNodedotjs,
+  siPostgresql,
+  siPython,
+  siReact,
+  siRedis,
+  siRust,
+  siThreedotjs,
+  siTypescript,
+  type SimpleIcon,
+} from 'simple-icons'
+
 // Placeholder copy until the mechanics are done.
 export const about = {
   lead: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
@@ -14,8 +34,10 @@ export const experience: Experience[] = Array.from({ length: 2 }, () => ({
     'Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.',
 }))
 
-// Icons come in step 5; for now each skill is just a name.
-export const skills: string[][] = [
-  ['ts', 'react', 'node', 'rust', 'go', 'py', 'pg', 'docker'],
-  ['three', 'gsap', 'figma', 'git', 'linux', 'aws', 'redis', 'bun'],
-]
+export type Skill = { name: string; icon: SimpleIcon }
+
+// Placeholder picks; the rows scroll in opposite directions.
+export const skills: Skill[][] = [
+  [siTypescript, siReact, siNodedotjs, siRust, siGo, siPython, siPostgresql, siDocker],
+  [siThreedotjs, siGreensock, siFigma, siGit, siLinux, siNeovim, siRedis, siBun],
+].map((row) => row.map((icon) => ({ name: icon.title, icon })))

@@ -19,6 +19,7 @@ reference for the projects stack. Mascot details: `MODELSPEC.md`.
 - **No "welcome."** Home drops the top-right headline. The FixedTitle greeting does that
   job.
 - **Name is "stephen"** (the mockups say "chaka").
+- **No visible scrollbar.** The page scrolls normally; the bar is hidden.
 - **Monotone.** Grayscale only, light and dark themes. Starting values from the mockups:
 
   | token          | light     | dark      | use                                  |
@@ -248,7 +249,7 @@ Each step leaves a working site.
    FixedTitle changes, BackToTop, mascot placement (Home center, corner peek and pop)
    with a placeholder.
 4. ✅ **Home + Contact.** Real copy, display typography, contact card rising to center.
-5. **About.** Skill marquees, experience list, images.
+5. ✅ **About.** Skill marquees, experience list, images.
 6. **Projects.** Pinned, scroll-driven stack and detail panel.
 7. **Particles.** Background field with parallax.
 8. **Theme dissolve.** Square-tile transition between themes.
