@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { HOME_MASCOT_ID } from './HomeMascot'
 import { MascotPlaceholder } from './MascotPlaceholder'
@@ -49,16 +48,22 @@ export function CornerMascot() {
         .set(el, HIDDEN)
     }
 
-    // Active once the bottom of the Home mascot has passed the top of the viewport.
-    const trigger = ScrollTrigger.create({
-      trigger: `#${HOME_MASCOT_ID}`,
-      start: 'bottom top',
-      end: 'max',
-      onToggle: (self) => (self.isActive ? appear() : pop()),
+    // Shown once the Home mascot has scrolled out of view above the viewport. An
+    // IntersectionObserver tracks the slot's real position, so it can't go stale when
+    // the layout shifts (fonts loading, sections resizing) the way measured scroll
+    // offsets can.
+    let shown = false
+    const observer = new IntersectionObserver(([entry]) => {
+      const passed = !entry.isIntersecting && entry.boundingClientRect.bottom <= 0
+      if (passed === shown) return
+      shown = passed
+      if (passed) appear()
+      else pop()
     })
+    observer.observe(document.getElementById(HOME_MASCOT_ID)!)
 
     return () => {
-      trigger.kill()
+      observer.disconnect()
       timeline?.kill()
     }
   }, [reducedMotion])

@@ -45,7 +45,18 @@ export function initScroll() {
   }
   document.addEventListener('click', onClick)
 
+  // Re-measure every ScrollTrigger when the page's size changes (fonts loading, content
+  // changing). Otherwise their start/end offsets go stale until the window is resized.
+  let refreshFrame = 0
+  const sizeObserver = new ResizeObserver(() => {
+    cancelAnimationFrame(refreshFrame)
+    refreshFrame = requestAnimationFrame(() => ScrollTrigger.refresh())
+  })
+  sizeObserver.observe(document.body)
+
   return () => {
+    sizeObserver.disconnect()
+    cancelAnimationFrame(refreshFrame)
     document.removeEventListener('click', onClick)
     gsap.ticker.remove(raf)
     snap.destroy()
@@ -65,4 +76,10 @@ export function scrollTo(target: number | string | HTMLElement) {
     const el = typeof target === 'string' ? document.querySelector(target) : target
     el?.scrollIntoView()
   }
+}
+
+/** Moves the page to `y` instantly, with no glide (e.g. following a drag). */
+export function jumpTo(y: number) {
+  if (lenis) lenis.scrollTo(y, { immediate: true, force: true })
+  else window.scrollTo({ top: y })
 }

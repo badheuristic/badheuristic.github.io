@@ -11,6 +11,7 @@
   --on-surface: #000000;
   --on-surface-alt: #f5f5f5;
   --on-surface-alt-muted: rgb(245 245 245 / 0.55);
+  --surface-alt-hover: rgb(255 255 255 / 0.08);
   --scrim: rgb(255 255 255 / 0.6);
   --particle: rgb(0 0 0 / 0.12);
 
@@ -67,7 +68,8 @@
   --fg-muted: #bdbdbd;
   --fg-faint: #3a3a3a;
   --surface: #dcdcdc;
-  --surface-alt: #111111;
+  --surface-alt: #303030;
+  --surface-alt-hover: rgb(255 255 255 / 0.1);
   --scrim: rgb(34 34 34 / 0.6);
   --particle: rgb(255 255 255 / 0.12);
 

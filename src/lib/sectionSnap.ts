@@ -18,7 +18,7 @@ const KEY_STEP_PX = 120
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2)
 
 /** How every section-to-section move glides: scroll gestures, nav links, closing contact. */
-export const GLIDE = { duration: 0.7, easing: easeInOutCubic, lock: true }
+export const GLIDE = { duration: 0.4, easing: easeInOutCubic, lock: true }
 
 type Zone = { start: number; end: number }
 
@@ -115,7 +115,15 @@ export function createSectionSnap(getLenis: () => Lenis | null) {
     return false
   }
 
-  const virtualScroll = ({ deltaY, event }: { deltaY: number; event: WheelEvent | TouchEvent }) => {
+  const virtualScroll = ({
+    deltaX,
+    deltaY,
+    event,
+  }: {
+    deltaX: number
+    deltaY: number
+    event: WheelEvent | TouchEvent
+  }) => {
     const lenis = getLenis()
     if (!lenis || event.ctrlKey) return true
 
@@ -136,6 +144,8 @@ export function createSectionSnap(getLenis: () => Lenis | null) {
       lastWheelDir = Math.sign(deltaY)
     }
     if (deltaY === 0) return true
+    // Mostly sideways swipes belong to horizontal controls (dragging the project stack).
+    if (event.type.startsWith('touch') && Math.abs(deltaX) > Math.abs(deltaY)) return false
 
     const free = step(lenis, deltaY)
     // Lenis leaves events we claim alone, so stop the browser scrolling them natively.

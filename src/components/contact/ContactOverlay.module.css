@@ -24,19 +24,25 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  width: min(560px, 100%);
+  width: min(400px, 100%);
   aspect-ratio: 1;
+  padding-block: 0.75rem;
   background: var(--surface-alt);
   color: var(--on-surface-alt);
   will-change: transform;
 }
 
-/* A centered list; rows span the card's width so the hover fill does too. */
+/* The rows split the square's height evenly and span its width, as does their hover fill. */
 .links {
   display: flex;
   flex-direction: column;
+  flex: 1;
   list-style: none;
+}
+
+.links > li {
+  display: flex;
+  flex: 1;
 }
 
 .row {
@@ -45,14 +51,14 @@
   justify-content: space-between;
   gap: 1rem;
   width: 100%;
-  padding: 0.85rem clamp(1.5rem, 5vw, 3rem);
+  padding-inline: clamp(1.25rem, 4vw, 2.25rem);
   text-align: left;
   transition: background-color var(--dur-fast) var(--ease-out);
 }
 
 .row:hover,
 .row:focus-visible {
-  background: rgb(255 255 255 / 0.07);
+  background: var(--surface-alt-hover);
 }
 
 .label {
@@ -80,6 +86,6 @@
 @media (max-width: 768px) {
   .card {
     aspect-ratio: auto;
-    padding-block: 1.5rem;
+    height: min(360px, 100%);
   }
 }

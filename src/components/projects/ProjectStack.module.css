@@ -17,6 +17,9 @@
   list-style: none;
   perspective: 1400px;
   perspective-origin: 35% 50%;
+  /* Horizontal drags cycle the stack; vertical swipes still scroll the page. */
+  touch-action: pan-y;
+  user-select: none;
 }
 
 .card {

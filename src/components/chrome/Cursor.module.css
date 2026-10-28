@@ -13,7 +13,10 @@
   pointer-events: none;
   /* The one exception to the no-rounded-corners rule. */
   border-radius: 50%;
-  background: var(--fg);
+  /* White + difference inverts whatever is underneath, so the cursor keeps its contrast
+     on the page, the dark contact card and grey tiles alike, in either theme. */
+  background: #fff;
+  mix-blend-mode: difference;
   opacity: 0;
   transition: opacity var(--dur) var(--ease-out);
   will-change: transform;

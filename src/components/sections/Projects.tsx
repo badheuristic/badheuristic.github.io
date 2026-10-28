@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { projects } from '../../content/projects'
 import { useActiveSection } from '../../hooks/useActiveSection'
-import { scrollTo } from '../../lib/scroll'
+import { jumpTo, scrollTo } from '../../lib/scroll'
 import { ProjectDetail } from '../projects/ProjectDetail'
 import { ProjectStack } from '../projects/ProjectStack'
 import layout from './Section.module.css'
@@ -38,13 +38,44 @@ export function Projects() {
     return () => trigger.kill()
   }, [])
 
-  // Scroll to the point in the pin where card `index` is in front.
-  const select = useCallback((index: number) => {
+  // Where the pin starts, and how far apart the cards' scroll stops are.
+  const geometry = useCallback(() => {
     const section = sectionRef.current!
     const top = section.getBoundingClientRect().top + window.scrollY
     const step = (section.offsetHeight - window.innerHeight) / (projects.length - 1)
-    scrollTo(top + step * index)
+    return { top, step }
   }, [])
+
+  // Scroll to the point in the pin where card `index` is in front.
+  const select = useCallback(
+    (index: number) => {
+      const { top, step } = geometry()
+      scrollTo(top + step * index)
+    },
+    [geometry],
+  )
+
+  // Dragging moves the page (and so the stack) live, then settles on a card.
+  const dragFrom = useRef(0)
+  const onDragStart = useCallback(() => {
+    dragFrom.current = position.current
+  }, [])
+  const onDrag = useCallback(
+    (cards: number) => {
+      const { top, step } = geometry()
+      const index = Math.min(Math.max(dragFrom.current + cards, 0), projects.length - 1)
+      jumpTo(top + step * index)
+    },
+    [geometry],
+  )
+  const onDragEnd = useCallback(
+    (cards: number) => {
+      // Any deliberate drag moves at least one card in its direction.
+      const by = Math.abs(cards) < 0.15 ? 0 : Math.sign(cards) * Math.max(1, Math.round(Math.abs(cards)))
+      select(Math.min(Math.max(Math.round(dragFrom.current) + by, 0), projects.length - 1))
+    },
+    [select],
+  )
 
   useEffect(() => {
     if (!isActive) return
@@ -69,7 +100,15 @@ export function Projects() {
       aria-label="Projects"
     >
       <div className={`${layout.section} ${styles.stage}`}>
-        <ProjectStack projects={projects} position={position} register={register} onSelect={select} />
+        <ProjectStack
+          projects={projects}
+          position={position}
+          register={register}
+          onSelect={select}
+          onDragStart={onDragStart}
+          onDrag={onDrag}
+          onDragEnd={onDragEnd}
+        />
         <div className={layout.column}>
           <ProjectDetail project={projects[current]} />
         </div>
