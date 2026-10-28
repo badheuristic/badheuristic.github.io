@@ -1,0 +1,26 @@
+/* Iosevka Aile, subset to the characters the site uses (scripts/subset-fonts.sh). If text
+   needs a character outside the subset, add its range there and rerun the script. */
+
+@font-face {
+  font-family: 'Iosevka Aile';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('../assets/fonts/iosevka-aile-300.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Iosevka Aile';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/iosevka-aile-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Iosevka Aile';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../assets/fonts/iosevka-aile-500.woff2') format('woff2');
+}

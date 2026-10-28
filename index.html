@@ -19,8 +19,55 @@
         document.documentElement.dataset.theme = theme;
       })();
     </script>
+    <style>
+      /* Loader: shown from the first byte until fonts and the mascot have loaded
+         (src/lib/ready.ts fades it out). Inline, since the stylesheet isn't here yet. */
+      #loader {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: grid;
+        place-items: center;
+        background: #ffffff;
+        color: #000000;
+        transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      [data-theme='dark'] #loader {
+        background: #222222;
+        color: #ffffff;
+      }
+      #loader[data-done='true'] {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #loader svg {
+        width: 28px;
+        height: 28px;
+        animation: loader-spin 1.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+      }
+      @keyframes loader-spin {
+        to {
+          rotate: 120deg;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #loader svg {
+          animation: none;
+        }
+      }
+    </style>
   </head>
   <body>
+    <!-- The logo's asterisk, turning a third at a time (it looks the same every 120°). -->
+    <div id="loader" aria-label="Loading" role="status">
+      <svg viewBox="-10 -10 20 20" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="3.4">
+          <line x1="0" y1="-9" x2="0" y2="9" />
+          <line x1="0" y1="-9" x2="0" y2="9" transform="rotate(60)" />
+          <line x1="0" y1="-9" x2="0" y2="9" transform="rotate(120)" />
+        </g>
+      </svg>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

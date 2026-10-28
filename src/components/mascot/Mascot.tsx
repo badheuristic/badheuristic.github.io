@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { appReady } from '../../lib/ready'
 import { start, useMascot } from './machine'
 import { MascotModel, type Colors, type Pointer } from './MascotModel'
 import styles from './Mascot.module.css'
@@ -22,7 +23,8 @@ export default function Mascot() {
   const still = useReducedMotion()
   const { bubble, since } = useMascot()
 
-  useEffect(start, [])
+  // Says hello once the loader is gone, not behind it.
+  useEffect(() => void appReady.then(start), [])
 
   useEffect(() => {
     const el = ref.current!

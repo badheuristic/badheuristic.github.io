@@ -2,6 +2,7 @@ import Lenis from 'lenis'
 import 'lenis/dist/lenis.css'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { appReady } from './ready'
 import { createSectionSnap, GLIDE } from './sectionSnap'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -26,6 +27,9 @@ export function initScroll() {
     virtualScroll: snap.virtualScroll,
   })
   lenis = instance
+  // No scrolling behind the loader.
+  instance.stop()
+  appReady.then(() => instance.start())
 
   const raf = (time: number) => instance.raf(time * 1000)
   instance.on('scroll', ScrollTrigger.update)
