@@ -38,8 +38,11 @@ export function FixedTitle() {
   useLayoutEffect(() => {
     const lines = ref.current!.querySelectorAll('[data-line]')
     if (active === shown) {
-      // Settles lines that were partway out if the section flipped back.
-      gsap.to(lines, { y: 0, duration: 0.4, ease: 'power3.out' })
+      // Settles lines left partway out when the section flipped back mid-drop. Lines that
+      // were just mounted sit at 0 and are left to the rise-in below; tweening them here
+      // too made the two animations fight over the lines.
+      const displaced = [...lines].some((line) => Number(gsap.getProperty(line, 'y')) !== 0)
+      if (displaced) gsap.to(lines, { y: 0, duration: 0.4, ease: 'power3.out', overwrite: true })
       return
     }
     if (reducedMotion) return
@@ -48,6 +51,7 @@ export function FixedTitle() {
       duration: 0.35,
       ease: 'power2.in',
       stagger: { each: 0.04, from: 'end' },
+      overwrite: true,
       onComplete: () => setShown(active),
     })
     return () => {
@@ -66,7 +70,7 @@ export function FixedTitle() {
     gsap.fromTo(
       lines,
       { y: belowViewport(ref.current!) },
-      { y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.06 },
+      { y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.06, overwrite: true },
     )
   }, [shown, reducedMotion])
 
