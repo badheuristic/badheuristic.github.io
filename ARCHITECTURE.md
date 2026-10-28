@@ -127,8 +127,8 @@ From back to front (z-order):
   viewport to the center and fades the scrim in. Scrolling back up lowers it again.
 - The Contact nav item and any "contact" links scroll to the end of that spacer, so the
   card arrives the same way.
-- No title. The card holds only the links, which split the whole square between them
-  as large rows: Email (copies on click), GitHub, LinkedIn, Resume, X.
+- No title. The card holds only the links, as a moderate-size list centered in the
+  near-black square: Email (copies on click), GitHub, LinkedIn, Resume, X.
 - `Esc` or clicking the scrim scrolls back to About.
 
 ## Mascot (`MODELSPEC.md`)

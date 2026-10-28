@@ -22,6 +22,9 @@
 
 .card {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: min(560px, 100%);
   aspect-ratio: 1;
   background: var(--surface-alt);
@@ -29,16 +32,11 @@
   will-change: transform;
 }
 
-/* The links split the whole card between them. */
+/* A centered list; rows span the card's width so the hover fill does too. */
 .links {
   display: flex;
   flex-direction: column;
-  height: 100%;
   list-style: none;
-}
-
-.links > li {
-  flex: 1;
 }
 
 .row {
@@ -47,8 +45,7 @@
   justify-content: space-between;
   gap: 1rem;
   width: 100%;
-  height: 100%;
-  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+  padding: 0.85rem clamp(1.5rem, 5vw, 3rem);
   text-align: left;
   transition: background-color var(--dur-fast) var(--ease-out);
 }
@@ -59,7 +56,7 @@
 }
 
 .label {
-  font-size: clamp(1.75rem, 1rem + 2.4vw, 3rem);
+  font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
   font-weight: var(--weight-light);
   line-height: 1;
   letter-spacing: -0.02em;
@@ -83,6 +80,6 @@
 @media (max-width: 768px) {
   .card {
     aspect-ratio: auto;
-    height: min(100%, 420px);
+    padding-block: 1.5rem;
   }
 }
