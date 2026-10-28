@@ -18,11 +18,9 @@ export function initScroll() {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return () => {}
 
   const snap = createSectionSnap(() => lenis)
-  // `anchors` makes in-page links (#about etc.) glide, the same way scrolling does.
   // `syncTouch` routes swipes through Lenis too, so they snap like the wheel.
   // `wheelMultiplier` speeds up free scrolling inside tall sections (About).
   const instance = new Lenis({
-    anchors: GLIDE,
     syncTouch: true,
     wheelMultiplier: 1.4,
     virtualScroll: snap.virtualScroll,
@@ -34,7 +32,21 @@ export function initScroll() {
   gsap.ticker.add(raf)
   gsap.ticker.lagSmoothing(0)
 
+  // In-page links (#about etc.) glide the same way scrolling does. Handled here rather
+  // than with Lenis's `anchors` option, which let the browser jump to the target for a
+  // moment first; the section tracker saw the jump and the nav highlight bounced.
+  const onClick = (e: MouseEvent) => {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+    const link = (e.target as Element | null)?.closest<HTMLAnchorElement>('a[href^="#"]')
+    const target = link && document.querySelector(link.hash || 'body')
+    if (!target) return
+    e.preventDefault()
+    instance.scrollTo(target as HTMLElement, GLIDE)
+  }
+  document.addEventListener('click', onClick)
+
   return () => {
+    document.removeEventListener('click', onClick)
     gsap.ticker.remove(raf)
     snap.destroy()
     instance.destroy()
