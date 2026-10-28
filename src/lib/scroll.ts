@@ -2,7 +2,7 @@ import Lenis from 'lenis'
 import 'lenis/dist/lenis.css'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { createSectionSnap } from './sectionSnap'
+import { createSectionSnap, GLIDE } from './sectionSnap'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -18,9 +18,9 @@ export function initScroll() {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return () => {}
 
   const snap = createSectionSnap(() => lenis)
-  // `anchors` makes in-page links (#about etc.) glide instead of jumping. `syncTouch`
-  // routes swipes through Lenis too, so they snap between sections like the wheel.
-  const instance = new Lenis({ anchors: true, syncTouch: true, virtualScroll: snap.virtualScroll })
+  // `anchors` makes in-page links (#about etc.) glide, the same way scrolling does.
+  // `syncTouch` routes swipes through Lenis too, so they snap like the wheel.
+  const instance = new Lenis({ anchors: GLIDE, syncTouch: true, virtualScroll: snap.virtualScroll })
   lenis = instance
 
   const raf = (time: number) => instance.raf(time * 1000)
@@ -38,7 +38,7 @@ export function initScroll() {
 
 export function scrollTo(target: number | string | HTMLElement) {
   if (lenis) {
-    lenis.scrollTo(target)
+    lenis.scrollTo(target, GLIDE)
     return
   }
   if (typeof target === 'number') {

@@ -6,10 +6,12 @@ import { sections } from '../content/sections'
 const GESTURE_GAP_MS = 180
 // Sections taller than the viewport by more than this scroll freely inside.
 const FREE_ZONE_MIN_PX = 40
-const SNAP_DURATION = 1.1
 const KEY_STEP_PX = 120
 
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2)
+
+/** How every section-to-section move glides: scroll gestures, nav links, closing contact. */
+export const GLIDE = { duration: 1.1, easing: easeInOutCubic, lock: true }
 
 type Zone = { start: number; end: number }
 
@@ -49,9 +51,7 @@ export function createSectionSnap(getLenis: () => Lenis | null) {
   const snapTo = (lenis: Lenis, target: number) => {
     snapping = true
     lenis.scrollTo(target, {
-      duration: SNAP_DURATION,
-      easing: easeInOutCubic,
-      lock: true,
+      ...GLIDE,
       onComplete: () => {
         snapping = false
       },
@@ -60,7 +60,8 @@ export function createSectionSnap(getLenis: () => Lenis | null) {
 
   /** Handles one step of input. Returns true when Lenis should scroll freely. */
   const step = (lenis: Lenis, delta: number) => {
-    if (snapping || spentGesture === gesture) return false
+    // `isLocked` covers glides started elsewhere (nav links); input waits them out.
+    if (snapping || lenis.isLocked || spentGesture === gesture) return false
     const dir = Math.sign(delta)
     const y = lenis.targetScroll
     const { stops, zones } = layout(lenis)
