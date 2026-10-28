@@ -20,7 +20,13 @@ export function initScroll() {
   const snap = createSectionSnap(() => lenis)
   // `anchors` makes in-page links (#about etc.) glide, the same way scrolling does.
   // `syncTouch` routes swipes through Lenis too, so they snap like the wheel.
-  const instance = new Lenis({ anchors: GLIDE, syncTouch: true, virtualScroll: snap.virtualScroll })
+  // `wheelMultiplier` speeds up free scrolling inside tall sections (About).
+  const instance = new Lenis({
+    anchors: GLIDE,
+    syncTouch: true,
+    wheelMultiplier: 1.4,
+    virtualScroll: snap.virtualScroll,
+  })
   lenis = instance
 
   const raf = (time: number) => instance.raf(time * 1000)
