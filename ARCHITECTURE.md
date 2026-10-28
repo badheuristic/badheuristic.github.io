@@ -72,7 +72,7 @@ From back to front (z-order):
 
 | Feature | Behavior | Implementation |
 |---|---|---|
-| Smooth scroll | Inertial page scroll. Anchor links glide. | Lenis, one shared instance in `lib/scroll.ts`, driving GSAP ScrollTrigger |
+| Section scrolling | One gesture (wheel flick, swipe, arrow/page key) glides to the next or previous section, like clicking it in the nav, so you never stop halfway (e.g. with the contact card half up). Sections taller than the viewport (About) scroll freely inside; the gesture that reaches their edge stops there and the next one moves on. Home/End jump to the ends. | Lenis's `virtualScroll` hook (`lib/sectionSnap.ts`) claims gestures and snaps with `scrollTo`; a 180ms pause between wheel events starts a new gesture, so trackpad inertia can't skip sections. Lenis runs on GSAP's ticker. |
 | Cursor | A dot at the pointer with a larger, fainter circle easing behind it. Mouse devices only. | `Cursor.tsx`, one `requestAnimationFrame` loop |
 | Active section | Switches as soon as the next section peeks in: the section covering a line 15% in from the edge you're scrolling toward (near the bottom scrolling down, near the top scrolling up). Drives everything below. | Checked on every ScrollTrigger update, feeding a tiny store (`useActiveSection`) |
 | Nav | Small text list (Home, Projects, About, Contact), fixed to the right edge on every section. The active item has a filled square highlight. To move, it stretches to cover the next item, then lets go of the old one: a square take on the mockup's gooey pill, since a goo filter would round the corners. | GSAP timeline for the stretch |
