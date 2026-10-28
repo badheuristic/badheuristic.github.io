@@ -189,14 +189,15 @@ Below 1024px wide (phones, tablets in portrait) or 500px tall (phones in landsca
   nav sit on a page-colored strip that fades out at the bottom, so content scrolling up
   slides under them.
 - **Scrolling:** touch-first devices scroll natively (momentum, rubber-banding), with no
-  section stepping. CSS `scroll-snap-type: y proximity` on section starts lets a scroll
-  that ends near a section settle on it, so the contact card can't stay half open. Nav
-  links glide with native smooth scrolling. Lenis and stepping stay for mouse and trackpad.
+  stepping and no snapping (with screen-tall sections, any snapping feels like stepping).
+  Once scrolling stops with no finger down, a half-raised contact card settles open or
+  closed, whichever is nearer. Nav links glide with native smooth scrolling. Lenis and
+  stepping stay for mouse and trackpad.
 - **ThemeSwitch:** stays in the top right as `light / dark`.
 - **FixedTitle:** stays fixed bottom left, scaled with `clamp()`. Content gets bottom
   padding to match. Hidden on screens under 500px tall, where there's no room for it.
-- **Intro:** fixed on Home as on desktop, but outside Home it hides instead of dimming
-  (six faint lines would cover half the screen). It still rides into About.
+- **Intro:** no hand-off. It scrolls away with Home like any text, and About shows its
+  own copy; a fixed paragraph would sit over the next section as it scrolls up.
 - **Mascot:** in the flow above the intro on Home, so short screens can't overlap them.
   The corner copy shrinks to 110px. Touch has no hover: the first tap shows
   `tap to talk to me`, a second tap acts as a click.

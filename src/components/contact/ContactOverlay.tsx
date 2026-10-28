@@ -2,11 +2,14 @@ import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import type { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { site } from '../../content/site'
-import { scrollTo } from '../../lib/scroll'
+import { isNativeScroll, scrollTo } from '../../lib/scroll'
 import styles from './ContactOverlay.module.css'
 
 // How far through the contact spacer the card counts as open (interactive).
 const OPEN_AT = 0.85
+// With native scrolling, once scrolling has been still this long (and no finger is down),
+// a half-raised card settles open or closed, whichever is nearer.
+const SETTLE_AFTER_MS = 200
 
 /**
  * Contact card that rises from below the viewport to its center as you scroll
@@ -44,7 +47,36 @@ export function ContactOverlay() {
       )
     triggerRef.current = timeline.scrollTrigger ?? null
 
+    // Section stepping does this on desktop; native scrolling (touch) needs it here.
+    let settleTimer = 0
+    let touching = false
+    const settle = () => {
+      const trigger = triggerRef.current
+      if (!trigger || touching || !isNativeScroll()) return
+      if (trigger.progress > 0.02 && trigger.progress < 0.98) {
+        scrollTo(trigger.progress >= 0.5 ? trigger.end : trigger.start)
+      }
+    }
+    const onScroll = () => {
+      clearTimeout(settleTimer)
+      settleTimer = window.setTimeout(settle, SETTLE_AFTER_MS)
+    }
+    const onTouchStart = () => {
+      touching = true
+    }
+    const onTouchEnd = () => {
+      touching = false
+      onScroll()
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchend', onTouchEnd, { passive: true })
+
     return () => {
+      clearTimeout(settleTimer)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchend', onTouchEnd)
       timeline.scrollTrigger?.kill()
       timeline.kill()
     }

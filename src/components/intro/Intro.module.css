@@ -29,10 +29,14 @@
 }
 
 @media (max-width: 1023px), (max-height: 500px) {
-  /* The column has side padding on narrow screens; the fixed copy matches it. Outside
-     Home it hides rather than dims: six faint lines would cover half the screen. */
+  /* Narrow screens skip the hand-off: the intro scrolls away with Home like any text,
+     and About shows its own copy. A fixed paragraph there would sit over the next
+     section as it scrolls up. */
+  .slot {
+    opacity: 1;
+  }
+
   .fixed {
-    padding-inline: var(--gutter);
-    opacity: 0;
+    display: none;
   }
 }
