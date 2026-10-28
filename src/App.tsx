@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { BackToTop } from './components/chrome/BackToTop'
 import { Cursor } from './components/chrome/Cursor'
 import { FixedTitle } from './components/chrome/FixedTitle'
 import { Header } from './components/chrome/Header'
@@ -31,7 +30,6 @@ export function App() {
       <Header />
       <Nav />
       <FixedTitle />
-      <BackToTop />
       <ContactOverlay />
       <CornerMascot />
 

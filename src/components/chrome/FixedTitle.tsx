@@ -13,7 +13,8 @@ const TITLES: Record<SectionId, Line[]> = {
   home: [{ text: site.greeting, faint: true, small: true }, { text: <Name /> }],
   projects: [{ text: 'projects', faint: true }],
   about: [{ text: 'about', faint: true }],
-  contact: [{ text: 'contact', faint: true }],
+  // The contact card speaks for itself.
+  contact: [],
 }
 
 // Distance that puts the whole title, top line included, below the viewport. Every
@@ -46,6 +47,13 @@ export function FixedTitle() {
       return
     }
     if (reducedMotion) return
+    // Nothing to drop out (Contact has no title): swap straight away.
+    if (lines.length === 0) {
+      const call = gsap.delayedCall(0, () => setShown(active))
+      return () => {
+        call.kill()
+      }
+    }
     const tween = gsap.to(lines, {
       y: belowViewport(ref.current!),
       duration: 0.35,
@@ -65,8 +73,8 @@ export function FixedTitle() {
       mounted.current = true
       return
     }
-    if (reducedMotion) return
     const lines = ref.current!.querySelectorAll('[data-line]')
+    if (reducedMotion || lines.length === 0) return
     gsap.fromTo(
       lines,
       { y: belowViewport(ref.current!) },

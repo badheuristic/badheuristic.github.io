@@ -11,9 +11,10 @@ reference for the projects stack. Mascot details: `MODELSPEC.md`.
 
 ## Design rules (overrides to the mockups)
 
-- **No borders, no rounded corners.** The mockups use pill shapes (active nav item,
-  Back to Top). We use flat filled rectangles with `border-radius: 0` everywhere, which
-  matches the square particles and skill tiles.
+- **No borders, no rounded corners.** The mockups use pill shapes (the active nav
+  item). We use flat filled rectangles with `border-radius: 0` everywhere, which matches
+  the square particles and skill tiles.
+- **No Back to Top button.** It's redundant with the nav.
 - **Nav is always a small rail on the right edge**, Home included. The large centered
   nav in the Home mockup is out; the mascot takes the center of Home instead.
 - **No "welcome."** Home drops the top-right headline. The FixedTitle greeting does that
@@ -50,7 +51,7 @@ From back to front (z-order):
 3  <main> sections         Home (with the mascot at its center) / Projects (pinned) /
                            About, normal document flow
 4  fixed chrome            Logo (top left), Blog link + ThemeSwitch (top right),
-                           Nav (right edge), BackToTop (bottom center)
+                           Nav (right edge)
 5  <ContactOverlay>        scrim + centered square card, rises from the bottom
                            (under the fixed chrome, so the nav stays usable)
 6  <CornerMascot>          fixed bottom right once Home is scrolled past (above the overlay)
@@ -73,10 +74,9 @@ From back to front (z-order):
 |---|---|---|
 | Smooth scroll | Inertial page scroll. Anchor links glide. | Lenis, one shared instance in `lib/scroll.ts`, driving GSAP ScrollTrigger |
 | Cursor | A dot at the pointer with a larger, fainter circle easing behind it. Mouse devices only. | `Cursor.tsx`, one `requestAnimationFrame` loop |
-| Active section | The section covering the middle of the viewport. Drives everything below. | Checked on every ScrollTrigger update, feeding a tiny store (`useActiveSection`) |
+| Active section | Switches as soon as the next section peeks in: the section covering a line 15% in from the edge you're scrolling toward (near the bottom scrolling down, near the top scrolling up). Drives everything below. | Checked on every ScrollTrigger update, feeding a tiny store (`useActiveSection`) |
 | Nav | Small text list (Home, Projects, About, Contact), fixed to the right edge on every section. The active item has a filled square highlight. To move, it stretches to cover the next item, then lets go of the old one: a square take on the mockup's gooey pill, since a goo filter would round the corners. | GSAP timeline for the stretch |
-| FixedTitle | Fixed bottom left, **behind** the content, so sections scroll over it. Shows "hello, i am / stephen" on Home, then "projects", "about", "contact". On a section change the old lines drop out of the bottom edge of the viewport and the new ones rise in from there. | `position: fixed` at `--z-backdrop`, text keyed on active section, GSAP |
-| BackToTop | Hidden on Home, visible elsewhere. Scrolls to top through Lenis. | |
+| FixedTitle | Fixed bottom left, **behind** the content, so sections scroll over it. Shows "hello, i am / stephen" on Home, then "projects" and "about". Contact has no title. On a section change the old lines drop out of the bottom edge of the viewport and the new ones rise in from there. | `position: fixed` at `--z-backdrop`, text keyed on active section, GSAP |
 | ThemeSwitch | A text toggle in the top right next to Blog: `light / dark`, with the current theme at full contrast and the other muted. Easy to read, and it fits the type-led look. Switching runs a **square-tile dissolve**: a grid of squares flips from the clicked point outward, revealing the new theme (the same square motif as the particles). The mascot reacts briefly (squints going light, sleepy face going dark). Starts from `prefers-color-scheme` and is saved in localStorage. | `data-theme` on `<html>` swaps the tokens. The dissolve is a short-lived canvas over everything, or the View Transitions API with a mask. Particles and mascot read the tokens too. |
 | Particles | Small squares that drift slowly. Each has a depth value: deeper squares are smaller and fainter and move less on scroll (parallax). | A single 2D canvas with a `requestAnimationFrame` loop and scroll offset from Lenis. Pauses when the tab is hidden. |
 | Mascot | Lives at the **center of Home** and scrolls with it. Once it has scrolled out of view, a copy in the **bottom-right corner** peeks in (just the top of its head, leaning in), then comes all the way out and stays fixed there. Scrolling back to Home makes the corner one **pop and vanish**; the Home one was there all along. See the Mascot section for the model itself. | Two slots (`HomeMascot`, `CornerMascot`). A ScrollTrigger on the Home slot toggles the corner timeline. Later both slots render one 3D scene (drei `<View>`). |
@@ -127,8 +127,8 @@ From back to front (z-order):
   viewport to the center and fades the scrim in. Scrolling back up lowers it again.
 - The Contact nav item and any "contact" links scroll to the end of that spacer, so the
   card arrives the same way.
-- Contents are kept short: one line of lead text, email (copy on click), GitHub,
-  LinkedIn, resume.
+- No title. The card holds only the links, which split the whole square between them
+  as large rows: Email (copies on click), GitHub, LinkedIn, Resume, X.
 - `Esc` or clicking the scrim scrolls back to About.
 
 ## Mascot (`MODELSPEC.md`)
@@ -224,7 +224,7 @@ src/
     useTheme.ts
     useReducedMotion.ts
   components/
-    chrome/                Logo, ThemeSwitch, ThemeDissolve, Nav, FixedTitle, BackToTop
+    chrome/                Logo, ThemeSwitch, ThemeDissolve, Nav, FixedTitle, Cursor
     sections/              Home, Projects, About
     contact/               ContactOverlay
     projects/              ProjectStack, ProjectCard, ProjectDetail
@@ -246,7 +246,7 @@ Each step leaves a working site.
 2. ✅ **Skeleton.** Home, Projects and About with placeholder content, the contact spacer,
    fixed chrome in place, reserved zones visible while developing, Lenis scrolling.
 3. ✅ **Navigation.** Active-section tracking, nav rail with sliding highlight,
-   FixedTitle changes, BackToTop, mascot placement (Home center, corner peek and pop)
+   FixedTitle changes, mascot placement (Home center, corner peek and pop)
    with a placeholder.
 4. ✅ **Home + Contact.** Real copy, display typography, contact card rising to center.
 5. ✅ **About.** Skill marquees, experience list, images.

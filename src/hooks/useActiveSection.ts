@@ -25,17 +25,23 @@ export function useActiveSection() {
   return useSyncExternalStore(subscribe, () => store.active)
 }
 
+// How much of the next section has to show (as a fraction of the viewport) to take over.
+const PEEK = 0.15
+
 /** Watches the sections and updates the active one. Mount once, in App. */
 export function useTrackActiveSection() {
   useEffect(() => {
-    // The active section is the one covering the middle of the viewport. Checked on
-    // every scroll update rather than with enter/leave toggles, so jumps that skip
-    // sections (or land exactly on a boundary) still resolve to the right one.
+    // The active section is the one covering a line across the viewport. The line sits
+    // near the edge you're scrolling toward, so the next section takes over as soon as
+    // it peeks in: near the bottom scrolling down, near the top scrolling up.
+    // Checked on every scroll update rather than with enter/leave toggles, so jumps that
+    // skip sections (or land exactly on a boundary) still resolve to the right one.
+    let direction = 1
     const update = () => {
-      const middle = window.innerHeight / 2
+      const line = window.innerHeight * (direction > 0 ? 1 - PEEK : PEEK)
       for (const { id } of sections) {
         const rect = document.getElementById(id)?.getBoundingClientRect()
-        if (rect && rect.top <= middle && rect.bottom > middle) {
+        if (rect && rect.top <= line && rect.bottom > line) {
           setActive(id)
           return
         }
@@ -44,7 +50,10 @@ export function useTrackActiveSection() {
     const trigger = ScrollTrigger.create({
       start: 0,
       end: 'max',
-      onUpdate: update,
+      onUpdate: (self) => {
+        direction = self.direction
+        update()
+      },
       onRefresh: update,
     })
     update()

@@ -90,15 +90,12 @@ export function ContactOverlay() {
         aria-hidden={!open}
         inert={!open}
       >
-        <p className={styles.lead}>{site.contact.lead}</p>
-
         <ul className={styles.links}>
           <li>
             <button type="button" className={styles.row} onClick={copyEmail}>
               <span className={styles.label}>Email</span>
-              <span>{site.contact.email}</span>
-              <span className={styles.hint} aria-live="polite">
-                {copied ? 'copied' : 'copy'}
+              <span className={styles.detail} aria-live="polite">
+                {copied ? 'copied' : site.contact.email}
               </span>
             </button>
           </li>
@@ -106,7 +103,7 @@ export function ContactOverlay() {
             <li key={label}>
               <a className={styles.row} href={href} target="_blank" rel="noreferrer">
                 <span className={styles.label}>{label}</span>
-                <span className={styles.hint} aria-hidden="true">
+                <span className={styles.detail} aria-hidden="true">
                   ↗
                 </span>
               </a>
