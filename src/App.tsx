@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Particles } from './components/background/Particles'
 import { Cursor } from './components/chrome/Cursor'
 import { FixedTitle } from './components/chrome/FixedTitle'
 import { FixedIntro } from './components/intro/FixedIntro'
@@ -21,6 +22,7 @@ export function App() {
 
   return (
     <>
+      <Particles />
       <main className={styles.main}>
         <Home />
         <Projects />
