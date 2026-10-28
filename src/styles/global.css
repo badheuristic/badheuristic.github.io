@@ -20,7 +20,9 @@ html::-webkit-scrollbar {
 }
 
 body {
-  min-height: 100dvh;
+  /* svh, not dvh: heights stay put when a mobile browser's address bar slides away, so
+     the page doesn't grow under the finger and jump. Same for the sections. */
+  min-height: 100svh;
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font);

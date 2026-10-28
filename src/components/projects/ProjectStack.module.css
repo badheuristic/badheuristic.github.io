@@ -1,6 +1,6 @@
 .scene {
   /* Shrinks on short screens too, to stay clear of the intro band below. */
-  --card: clamp(10rem, min(22vw, 32dvh), 22rem);
+  --card: clamp(10rem, min(22vw, 32svh), 22rem);
 
   display: grid;
   justify-items: center;

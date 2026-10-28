@@ -17,7 +17,7 @@
     left: auto;
     translate: none;
     flex: none;
-    width: min(var(--mascot-home-size), 45dvh);
+    width: min(var(--mascot-home-size), 45svh);
     margin-inline: auto;
   }
 }

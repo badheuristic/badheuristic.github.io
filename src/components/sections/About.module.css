@@ -14,7 +14,7 @@
   flex-direction: column;
   justify-content: center;
   width: calc(var(--col-start) - var(--gutter));
-  height: 100dvh;
+  height: 100svh;
   /* Spans the section's padding too, without adding to its height. */
   margin-block: calc(-1 * (var(--gutter) + 4rem));
   overflow: hidden;

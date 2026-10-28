@@ -2,7 +2,7 @@
 
 .section {
   position: relative;
-  min-height: 100dvh;
+  min-height: 100svh;
   padding-block: calc(var(--gutter) + 4rem);
 }
 

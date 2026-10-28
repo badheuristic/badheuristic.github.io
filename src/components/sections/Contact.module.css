@@ -2,7 +2,7 @@
 .contact {
   display: grid;
   place-items: center;
-  height: 100dvh;
+  height: 100svh;
   padding: var(--gutter);
 }
 
@@ -75,6 +75,6 @@
 @media (max-width: 1023px), (max-height: 500px) {
   .card {
     aspect-ratio: auto;
-    height: min(360px, 70dvh);
+    height: min(360px, 70svh);
   }
 }

@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   gap: clamp(2rem, 4vw, 4rem);
-  height: 100dvh;
+  height: 100svh;
   padding-right: calc(var(--zone-rail-w) + var(--gutter));
   padding-bottom: calc(var(--intro-band, 0px) + 1rem);
   /* Passed cards slide off to the left. */
@@ -21,7 +21,7 @@
     flex-direction: column;
     /* Grows when short screens need the room; section snapping then scrolls inside it. */
     height: auto;
-    min-height: 100dvh;
+    min-height: 100svh;
     gap: 2rem;
     padding: calc(var(--gutter) + 5.5rem) var(--gutter) calc(var(--zone-title-h) + var(--gutter));
   }
