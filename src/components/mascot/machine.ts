@@ -14,6 +14,11 @@ const HELLO_MS = 2600
 const CURIOUS_MS = 3600
 const REACT_MS = 1300
 const CLICK_MS = 2000
+// On touch screens (no hover) the first tap asks for a second one, for this long.
+const TAP_MS = 4000
+const TAP_TEXT = 'tap to talk to me'
+// Taps closer together than this count as one (the same tap can arrive more than once).
+const TAP_DEDUPE_MS = 300
 // Each distracted face lasts this long, in this order.
 const PHONE_FACE_MS = 2200
 const PHONE_FACES: [Face, string][] = [
@@ -39,6 +44,7 @@ let hovering = false
 let lastInteraction = performance.now()
 let hiddenAt = 0
 let lastSectionReact = 0
+let lastTap = -Infinity
 
 const random = ([min, max]: [number, number]) => min + Math.random() * (max - min)
 
@@ -97,6 +103,17 @@ export function poke() {
   lastInteraction = performance.now()
   set('attentive', 'happy', 'coming soon!')
   after(CLICK_MS, idle)
+}
+
+/** A tap on a touch screen: the first one asks for another, the second acts like a click. */
+export function tap() {
+  const now = performance.now()
+  if (now - lastTap < TAP_DEDUPE_MS) return
+  lastTap = now
+  lastInteraction = now
+  if (snapshot.state === 'attentive' && snapshot.bubble === TAP_TEXT) return poke()
+  set('attentive', 'smile', TAP_TEXT)
+  after(TAP_MS, idle)
 }
 
 /** A short reaction (theme switch), then back to idle. Skipped while hovered. */

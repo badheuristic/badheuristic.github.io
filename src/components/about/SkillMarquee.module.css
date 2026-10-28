@@ -52,7 +52,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px), (max-height: 500px) {
   .marquee {
     --tile: 3rem;
     --gap: 1.25rem;

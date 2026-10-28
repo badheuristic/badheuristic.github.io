@@ -11,9 +11,10 @@
   width: calc(var(--col-end) - var(--col-start));
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px), (max-height: 500px) {
   .section {
-    /* Clear the fixed title at the bottom of the screen. */
+    /* Clear the header and nav row at the top, and the fixed title at the bottom. */
+    padding-top: calc(var(--gutter) + 5.5rem);
     padding-bottom: calc(var(--zone-title-h) + var(--gutter) * 2);
   }
 

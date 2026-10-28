@@ -183,21 +183,27 @@ it can never fall out of sync with the monotone theme (materials read the theme 
 
 ## Mobile (no mockups, adapted from desktop)
 
-Below about 768px:
+Below 1024px wide (phones, tablets in portrait) or 500px tall (phones in landscape):
 
-- **Nav:** the rail becomes a compact horizontal row at the top under the logo, with the
-  same sliding highlight.
+- **Nav:** a compact row under the logo, with the same sliding highlight. The header and
+  nav sit on a page-colored strip that fades out at the bottom, so content scrolling up
+  slides under them.
 - **ThemeSwitch:** stays in the top right as `light / dark`.
-- **FixedTitle:** stays fixed bottom left, scaled with `clamp()` so it takes up no more
-  than about 15% of the screen height. Content gets bottom padding to match.
-- **Mascot:** centered on Home as on desktop. The corner copy shrinks to about 110px. The bubble moves to its
-  left. Hover becomes tap: the first tap shows `tap to talk to me`, a second tap opens
-  chat.
-- **Projects:** still pinned and scroll-driven. Cards recede upward/backward instead of
-  to the right, so they fit a narrow screen. Detail text goes below the stack.
-- **About:** marquees go full width above the text column, and the two images stack.
+- **FixedTitle:** stays fixed bottom left, scaled with `clamp()`. Content gets bottom
+  padding to match. Hidden on screens under 500px tall, where there's no room for it.
+- **Intro:** fixed on Home as on desktop, but outside Home it hides instead of dimming
+  (six faint lines would cover half the screen). It still rides into About.
+- **Mascot:** in the flow above the intro on Home, so short screens can't overlap them.
+  The corner copy shrinks to 110px. Touch has no hover: the first tap shows
+  `tap to talk to me`, a second tap acts as a click.
+- **Projects:** stack on top (smaller card, three cards behind instead of five), details
+  below. The section grows past one screen when it needs to, and scrolls inside.
+- **About:** marquees go full width above the text column.
 - **Contact card:** full width minus the page margin, still rises to center.
 - **Particles:** fewer of them (density scales with screen area).
+- Checked at 390×844 (phone), 820×1180 (tablet portrait) and 844×390 (phone landscape),
+  including swipes (one swipe, one section), free scrolling in About, sideways drags on
+  the stack and taps on the mascot.
 
 ## Blog
 
@@ -263,7 +269,7 @@ Each step leaves a working site.
 7. ✅ **Particles.** Background field with parallax.
 8. ✅ **Theme dissolve.** Square-tile transition between themes.
 9. ✅ **Mascot.** Head, face canvas, states and blending, bubble, hover and click.
-10. **Mobile + polish.** Responsive layout, accessibility, reduced motion, performance,
+10. **Mobile + polish.** (Mobile done; the polish pass is still to do.) Responsive layout, accessibility, reduced motion, performance,
     deploy.
 11. **Later.** Chat overlay backed by RAG; blog.
 

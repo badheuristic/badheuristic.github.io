@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { canBlink, drawFace, FACE_SIZE } from './face'
-import { getSnapshot, poke, setHover, useMascot } from './machine'
+import { getSnapshot, poke, setHover, tap, useMascot } from './machine'
 
 const HEAD = 1.5
 const HAND = 0.22
@@ -126,6 +126,8 @@ export function MascotModel({ colors, pointer, bubble, still }: Props) {
   const faceGlowMap = useMemo(() => glowTexture(), [])
   useEffect(() => () => faceGlowMap.dispose(), [faceGlowMap])
   const blink = useRef({ on: false, next: 2 })
+  // Touch has no hover: taps are handled on their own (see machine.tap).
+  const touch = useRef(false)
 
   const canvas = useMemo(() => {
     const el = document.createElement('canvas')
@@ -206,9 +208,12 @@ export function MascotModel({ colors, pointer, bubble, still }: Props) {
     <group ref={root}>
       <mesh
         ref={head}
-        onPointerOver={() => setHover(true)}
-        onPointerOut={() => setHover(false)}
-        onClick={poke}
+        onPointerDown={(e) => {
+          touch.current = e.nativeEvent.pointerType === 'touch'
+        }}
+        onPointerOver={(e) => e.nativeEvent.pointerType !== 'touch' && setHover(true)}
+        onPointerOut={(e) => e.nativeEvent.pointerType !== 'touch' && setHover(false)}
+        onClick={() => (touch.current ? tap() : poke())}
       >
         <boxGeometry args={[HEAD, HEAD, HEAD]} />
         {/* Box faces in order +x, -x, +y, -y, +z (front), -z. The face is unlit so it keeps

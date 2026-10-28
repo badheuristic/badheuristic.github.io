@@ -23,3 +23,17 @@
   font-size: var(--text-sm);
   font-weight: var(--weight-regular);
 }
+
+@media (max-width: 1023px), (max-height: 500px) {
+  /* Behind the logo and the nav row under it: the page color, fading out at the bottom,
+     so content scrolling up slides under the chrome instead of running into it. */
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: -1;
+    height: calc(var(--gutter) * 2 + 4.5rem);
+    background: linear-gradient(var(--bg) 70%, transparent);
+    pointer-events: none;
+  }
+}

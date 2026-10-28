@@ -9,3 +9,15 @@
   width: var(--mascot-home-size);
   aspect-ratio: 1;
 }
+
+@media (max-width: 1023px), (max-height: 500px) {
+  .slot {
+    position: relative;
+    top: auto;
+    left: auto;
+    translate: none;
+    flex: none;
+    width: min(var(--mascot-home-size), 45dvh);
+    margin-inline: auto;
+  }
+}

@@ -45,7 +45,7 @@
   color: var(--on-surface);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px), (max-height: 500px) {
   /* A row under the header. Finalized in step 10. */
   .nav {
     top: calc(var(--gutter) + 1.75rem);

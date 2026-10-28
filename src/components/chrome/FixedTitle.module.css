@@ -30,8 +30,15 @@
   color: var(--fg-faint);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px), (max-height: 500px) {
   .title {
     font-size: clamp(2.5rem, 14vw, 4rem);
+  }
+}
+
+/* Short screens (phones in landscape) have no room for it beside the content. */
+@media (max-height: 500px) {
+  .title {
+    display: none;
   }
 }

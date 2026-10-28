@@ -78,3 +78,19 @@
 :root[data-theme='dark'] .shadow {
   background: radial-gradient(closest-side, rgb(0 0 0 / 0.5), transparent);
 }
+
+@media (max-width: 1023px), (max-height: 500px) {
+  /* A smaller card, and room for three cards behind it (see ProjectStack.tsx). */
+  .scene {
+    --card: min(44vw, 13rem);
+  }
+
+  .stack {
+    width: calc(var(--card) * 2.05);
+  }
+
+  .shadow {
+    width: calc(var(--card) * 2);
+    margin-top: 1.5rem;
+  }
+}

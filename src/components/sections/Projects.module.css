@@ -14,3 +14,20 @@
 .detail {
   flex: 0 1 30ch;
 }
+
+@media (max-width: 1023px), (max-height: 500px) {
+  /* Stack on top, details below, clear of the header and the fixed title. */
+  .projects {
+    flex-direction: column;
+    /* Grows when short screens need the room; section snapping then scrolls inside it. */
+    height: auto;
+    min-height: 100dvh;
+    gap: 2rem;
+    padding: calc(var(--gutter) + 5.5rem) var(--gutter) calc(var(--zone-title-h) + var(--gutter));
+  }
+
+  .detail {
+    flex: none;
+    width: 100%;
+  }
+}

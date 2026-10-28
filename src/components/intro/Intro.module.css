@@ -27,3 +27,12 @@
 .fixed[data-lit='true'] {
   opacity: 1;
 }
+
+@media (max-width: 1023px), (max-height: 500px) {
+  /* The column has side padding on narrow screens; the fixed copy matches it. Outside
+     Home it hides rather than dims: six faint lines would cover half the screen. */
+  .fixed {
+    padding-inline: var(--gutter);
+    opacity: 0;
+  }
+}

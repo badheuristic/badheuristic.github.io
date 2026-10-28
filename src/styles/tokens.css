@@ -80,7 +80,7 @@
   color-scheme: dark;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px), (max-height: 500px) {
   :root {
     --col-start: var(--gutter);
     --col-end: calc(100vw - var(--gutter));
@@ -88,5 +88,12 @@
     --zone-title-w: 70vw;
     --zone-title-h: 15vh;
     --zone-rail-w: 0px;
+  }
+}
+
+/* Short screens hide the fixed title (FixedTitle.module.css), so content needs no room for it. */
+@media (max-height: 500px) {
+  :root {
+    --zone-title-h: 0px;
   }
 }

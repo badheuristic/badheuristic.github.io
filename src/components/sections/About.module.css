@@ -86,7 +86,7 @@
   color: var(--fg-muted);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px), (max-height: 500px) {
   .skills {
     position: static;
     grid-area: auto;

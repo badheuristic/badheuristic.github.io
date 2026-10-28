@@ -7,3 +7,17 @@
   /* Lines up with the name in the fixed title. */
   margin-bottom: calc(var(--gutter) + 1rem);
 }
+
+@media (max-width: 1023px), (max-height: 500px) {
+  /* The mascot sits in the flow above the intro, so short screens can't overlap them. */
+  .home {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .intro {
+    margin-bottom: 0;
+  }
+}

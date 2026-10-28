@@ -3,8 +3,11 @@ import { createWheelGestures } from '../../lib/wheelGesture'
 import type { Project } from '../../content/projects'
 import styles from './ProjectStack.module.css'
 
-// Cards further back than this fade out.
+// Cards further back than this fade out. Fewer on narrow screens, so the stack fits.
 const VISIBLE_BEHIND = 5
+const VISIBLE_BEHIND_NARROW = 3
+// Same as the CSS breakpoint for the narrow layout.
+const NARROW = '(max-width: 1023px), (max-height: 500px)'
 // Horizontal drag distance, as a fraction of the card size, that moves one card.
 const DRAG_PER_CARD = 0.6
 // Pointer travel (px) before a press counts as a drag rather than a click.
@@ -17,13 +20,13 @@ type Pose = { x: number; z: number; rotateY: number; opacity: number; fog: numbe
  * scrolling). Upcoming cards recede into depth to the right; passed cards slide off
  * to the left, toward the viewer, fading out.
  */
-function pose(d: number, size: number): Pose {
+function pose(d: number, size: number, behind: number): Pose {
   if (d >= 0) {
     return {
       x: d * size * 0.34,
       z: -d * size * 0.3,
       rotateY: -10 - Math.min(d, 1) * 24,
-      opacity: Math.max(0, Math.min(1, VISIBLE_BEHIND + 1 - d)),
+      opacity: Math.max(0, Math.min(1, behind + 1 - d)),
       fog: Math.min(d * 0.1, 0.6),
     }
   }
@@ -133,9 +136,10 @@ export function ProjectStack({
   useLayoutEffect(() => {
     const apply = () => {
       const size = stackRef.current?.querySelector('li')?.offsetWidth ?? 0
+      const behind = matchMedia(NARROW).matches ? VISIBLE_BEHIND_NARROW : VISIBLE_BEHIND
       cardRefs.current.forEach((card, i) => {
         if (!card) return
-        const { x, z, rotateY, opacity, fog } = pose(i - position.current, size)
+        const { x, z, rotateY, opacity, fog } = pose(i - position.current, size, behind)
         card.style.transform = `translate3d(${x}px, 0, ${z}px) rotateY(${rotateY}deg)`
         card.style.opacity = String(opacity)
         card.style.visibility = opacity < 0.01 ? 'hidden' : 'visible'
