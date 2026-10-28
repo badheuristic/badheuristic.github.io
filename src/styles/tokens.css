@@ -8,6 +8,7 @@
   --fg-faint: #dcdcdc;
   --surface: #d9d9d9;
   --surface-alt: #636363;
+  --on-surface: #000000;
   --scrim: rgb(255 255 255 / 0.6);
   --particle: rgb(0 0 0 / 0.12);
 
@@ -20,15 +21,22 @@
   --text-sm: 0.875rem;
   --text-base: 1rem;
   --text-lg: clamp(1.125rem, 0.9rem + 0.6vw, 1.5rem);
-  --text-display: clamp(4rem, 1rem + 9vw, 10rem);
+  --text-display: clamp(3.5rem, 1rem + 6.5vw, 8rem);
   --tracking-display: -0.04em;
   --leading-display: 0.85;
 
   /* Spacing */
   --gutter: clamp(1rem, 0.5rem + 2vw, 2.5rem);
 
-  /* Reserved zones (see ARCHITECTURE.md) */
+  /* Layout: sections keep their main content in this column. */
+  --col-start: 44vw;
+  --col-end: 81vw;
+
+  /* Reserved zones for fixed elements (see ARCHITECTURE.md) */
   --mascot-size: 280px;
+  --zone-title-w: 34vw;
+  --zone-title-h: clamp(8rem, 22vh, 14rem);
+  --zone-rail-w: 9rem;
 
   /* Motion */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -62,6 +70,11 @@
 
 @media (max-width: 768px) {
   :root {
+    --col-start: var(--gutter);
+    --col-end: calc(100vw - var(--gutter));
     --mascot-size: 110px;
+    --zone-title-w: 70vw;
+    --zone-title-h: 15vh;
+    --zone-rail-w: 0px;
   }
 }

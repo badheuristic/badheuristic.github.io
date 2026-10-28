@@ -1,0 +1,25 @@
+/* Shared section layout. Main content sits in the column between --col-start and --col-end. */
+
+.section {
+  position: relative;
+  min-height: 100dvh;
+  padding-block: calc(var(--gutter) + 4rem);
+}
+
+.column {
+  margin-left: var(--col-start);
+  width: calc(var(--col-end) - var(--col-start));
+}
+
+@media (max-width: 768px) {
+  .section {
+    /* Clear the fixed title at the bottom of the screen. */
+    padding-bottom: calc(var(--zone-title-h) + var(--gutter) * 2);
+  }
+
+  .column {
+    margin-left: 0;
+    padding-inline: var(--gutter);
+    width: 100%;
+  }
+}

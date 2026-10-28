@@ -1,0 +1,25 @@
+.header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: var(--z-chrome);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: var(--gutter);
+  pointer-events: none;
+}
+
+.header > * {
+  pointer-events: auto;
+}
+
+.end {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+}
+
+.blog {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+}

@@ -1,0 +1,104 @@
+.about {
+  display: grid;
+}
+
+/* Left area, vertically centered beside the text column, clear of the fixed title. */
+.skills {
+  position: sticky;
+  top: 0;
+  grid-area: 1 / 1;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.25rem;
+  width: calc(var(--col-start) - var(--gutter));
+  height: 100dvh;
+  margin-top: calc(-1 * (var(--gutter) + 4rem));
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  gap: 2rem;
+}
+
+.row:nth-child(2) {
+  margin-left: -2.5rem;
+}
+
+.tile {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  aspect-ratio: 1;
+  background: var(--surface);
+  color: var(--on-surface);
+  font-size: var(--text-xs);
+}
+
+.content {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.lead {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-regular);
+  line-height: 1.35;
+}
+
+.body {
+  max-width: 62ch;
+}
+
+.images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.image {
+  aspect-ratio: 4 / 5;
+  background: var(--surface);
+}
+
+.heading {
+  margin-top: 1rem;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-regular);
+}
+
+.experience {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.role {
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+}
+
+.dates {
+  margin-bottom: 0.75rem;
+  color: var(--fg-muted);
+}
+
+@media (max-width: 768px) {
+  .skills {
+    position: static;
+    grid-area: auto;
+    width: 100%;
+    height: auto;
+    margin: 0 0 3rem;
+  }
+
+  .content {
+    grid-area: auto;
+  }
+}

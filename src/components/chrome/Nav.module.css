@@ -1,0 +1,50 @@
+.nav {
+  position: fixed;
+  top: 50%;
+  right: var(--gutter);
+  z-index: var(--z-chrome);
+  translate: 0 -50%;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  list-style: none;
+}
+
+.link {
+  display: block;
+  padding: 0.35rem 0.75rem;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  color: var(--fg-muted);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.link:hover {
+  color: var(--fg);
+}
+
+@media (max-width: 768px) {
+  /* Mobile placement is finalized in step 10; a top row keeps it out of the way for now. */
+  .nav {
+    top: calc(var(--gutter) + 1.75rem);
+    right: auto;
+    left: var(--gutter);
+    translate: none;
+  }
+
+  .list {
+    flex-direction: row;
+  }
+
+  .link {
+    padding-inline: 0.5rem;
+  }
+
+  .list li:first-child .link {
+    padding-left: 0;
+  }
+}

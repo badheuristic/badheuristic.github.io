@@ -1,34 +1,35 @@
+import { useEffect } from 'react'
+import { BackToTop } from './components/chrome/BackToTop'
 import { Cursor } from './components/chrome/Cursor'
-import { Logo } from './components/chrome/Logo'
-import { Name } from './components/chrome/Name'
-import { ThemeSwitch } from './components/chrome/ThemeSwitch'
-import { site } from './content/site'
+import { FixedTitle } from './components/chrome/FixedTitle'
+import { Header } from './components/chrome/Header'
+import { Nav } from './components/chrome/Nav'
+import { Zones } from './components/dev/Zones'
+import { About } from './components/sections/About'
+import { ContactSpacer } from './components/sections/ContactSpacer'
+import { Home } from './components/sections/Home'
+import { Projects } from './components/sections/Projects'
+import { initScroll } from './lib/scroll'
 import styles from './App.module.css'
 
 export function App() {
+  useEffect(() => initScroll(), [])
+
   return (
     <>
-      <header className={styles.header}>
-        <Logo />
-        <div className={styles.headerEnd}>
-          <a href={site.links.blog} className={styles.blog} target="_blank" rel="noreferrer">
-            Blog
-          </a>
-          <ThemeSwitch />
-        </div>
-      </header>
-
-      {/* Placeholder until the section skeleton (step 2). */}
-      <main id="home" className={styles.main}>
-        <p className={styles.intro}>{site.intro}</p>
-        <h1 className={styles.title}>
-          <span className={styles.greeting}>{site.greeting}</span>
-          <span className={styles.name}>
-            <Name />
-          </span>
-        </h1>
+      <main className={styles.main}>
+        <Home />
+        <Projects />
+        <About />
+        <ContactSpacer />
       </main>
 
+      <Header />
+      <Nav />
+      <FixedTitle />
+      <BackToTop />
+
+      {import.meta.env.DEV && <Zones />}
       <Cursor />
     </>
   )

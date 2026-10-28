@@ -8,7 +8,8 @@ export function Name() {
   return (
     <span
       className={styles.redacted}
-      style={{ width: `${site.redactedLength * 0.55}em` }}
+      // Iosevka glyphs are 0.5em wide, so the bar matches the name's real width.
+      style={{ width: `${site.redactedLength * 0.5}em` }}
       role="img"
       aria-label="name redacted"
     />

@@ -1,0 +1,28 @@
+.title {
+  position: fixed;
+  left: var(--gutter);
+  bottom: var(--gutter);
+  z-index: var(--z-chrome);
+  display: flex;
+  flex-direction: column;
+  max-width: var(--zone-title-w);
+  font-size: var(--text-display);
+  font-weight: var(--weight-light);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+  pointer-events: none;
+  user-select: none;
+}
+
+.greeting {
+  font-size: 0.6em;
+  /* Smaller line, so it needs looser tracking than the name below. */
+  letter-spacing: 0;
+  color: var(--fg-faint);
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: clamp(2.5rem, 14vw, 4rem);
+  }
+}

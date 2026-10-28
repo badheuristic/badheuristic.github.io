@@ -1,0 +1,44 @@
+.zones {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-chat);
+  pointer-events: none;
+}
+
+.zone {
+  position: absolute;
+  padding: 0.25rem 0.4rem;
+  font-size: 10px;
+  color: rgb(255 0 90);
+  background: rgb(255 0 90 / 0.07);
+}
+
+.column {
+  top: 0;
+  bottom: 0;
+  left: var(--col-start);
+  width: calc(var(--col-end) - var(--col-start));
+  background: rgb(0 140 255 / 0.05);
+  color: rgb(0 140 255);
+}
+
+.title {
+  left: 0;
+  bottom: 0;
+  width: calc(var(--zone-title-w) + var(--gutter));
+  height: calc(var(--zone-title-h) + var(--gutter));
+}
+
+.rail {
+  top: 30%;
+  bottom: 30%;
+  right: 0;
+  width: calc(var(--zone-rail-w) + var(--gutter));
+}
+
+.mascot {
+  right: 0;
+  bottom: 0;
+  width: var(--mascot-size);
+  height: calc(var(--mascot-size) * 1.3);
+}
