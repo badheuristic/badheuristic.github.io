@@ -1,6 +1,7 @@
 .slot {
   position: absolute;
-  top: 50%;
+  /* A little above center, so hands and phone below the head clear the intro text. */
+  top: 42%;
   left: 50%;
   translate: -50% -50%;
   display: grid;

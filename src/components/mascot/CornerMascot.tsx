@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { HOME_MASCOT_ID } from './HomeMascot'
-import { MascotPlaceholder } from './MascotPlaceholder'
+import { LazyMascot } from './LazyMascot'
 import styles from './CornerMascot.module.css'
 
 const HIDDEN = { x: '25%', y: '110%', rotation: 0, scale: 1, autoAlpha: 0 }
@@ -71,7 +71,7 @@ export function CornerMascot() {
   return (
     <div className={styles.corner}>
       <div ref={ref} className={styles.mascot}>
-        <MascotPlaceholder />
+        <LazyMascot />
       </div>
     </div>
   )

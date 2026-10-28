@@ -1,0 +1,50 @@
+/* Fills the slot exactly (both slots are square), so the camera's framing holds. */
+.mascot {
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;
+}
+
+.canvas {
+  position: absolute !important;
+  inset: 0;
+}
+
+/* Speech bubble above the head: a square box with a small tail. */
+.bubble {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  z-index: 1;
+  translate: -50% 0;
+  padding: 0.35rem 0.65rem;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  pointer-events: none;
+  animation: pop 0.35s var(--ease-out) both;
+}
+
+.bubble::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  translate: -50% 0;
+  border: 6px solid transparent;
+  border-top-color: var(--fg);
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.85);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bubble {
+    animation: none;
+  }
+}

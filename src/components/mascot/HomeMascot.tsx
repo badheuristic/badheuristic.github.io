@@ -1,4 +1,4 @@
-import { MascotPlaceholder } from './MascotPlaceholder'
+import { LazyMascot } from './LazyMascot'
 import styles from './HomeMascot.module.css'
 
 export const HOME_MASCOT_ID = 'home-mascot'
@@ -7,7 +7,7 @@ export const HOME_MASCOT_ID = 'home-mascot'
 export function HomeMascot() {
   return (
     <div id={HOME_MASCOT_ID} className={styles.slot}>
-      <MascotPlaceholder />
+      <LazyMascot />
     </div>
   )
 }

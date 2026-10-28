@@ -14,6 +14,8 @@
   --surface-alt-hover: rgb(255 255 255 / 0.08);
   --scrim: rgb(255 255 255 / 0.6);
   --particle: rgb(0 0 0 / 0.22);
+  --mascot: #1c1c1c;
+  --mascot-ink: #f5f5f5;
 
   /* Type */
   --font: 'Iosevka Aile', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -72,6 +74,8 @@
   --surface-alt-hover: rgb(255 255 255 / 0.1);
   --scrim: rgb(34 34 34 / 0.6);
   --particle: rgb(255 255 255 / 0.12);
+  --mascot: #e6e6e6;
+  --mascot-ink: #111111;
 
   color-scheme: dark;
 }

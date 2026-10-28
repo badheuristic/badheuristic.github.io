@@ -80,7 +80,7 @@ From back to front (z-order):
 | FixedTitle | Fixed bottom left, **behind** the content, so sections scroll over it. Shows "hello, i am / stephen" on Home, then "projects" and "about". Contact has no title. On a section change the old lines drop out of the bottom edge of the viewport and the new ones rise in from there. | `position: fixed` at `--z-backdrop`, text keyed on active section, GSAP |
 | ThemeSwitch | A text toggle in the top right next to Blog: `light / dark`, with the current theme at full contrast and the other muted. Easy to read, and it fits the type-led look. Switching runs a **square-tile dissolve**: a grid of squares flips from the clicked point outward, revealing the new theme (the same square motif as the particles). The mascot reacts briefly (squints going light, sleepy face going dark). Starts from `prefers-color-scheme` and is saved in localStorage. | `data-theme` on `<html>` swaps the tokens. The dissolve (`lib/themeDissolve.ts`) is a view transition: the new-theme snapshot (on top by default) shows only through a `clip-path: path()` of 72px tiles rebuilt each frame, each growing from its center on a delay set by its distance from the click (0.28s per tile, 0.5s ripple). Reduced motion gets the default crossfade; browsers without view transitions switch instantly. Particles and mascot read the tokens too. |
 | Particles | Small squares that drift slowly. Each has a depth value: deeper squares are smaller and fainter and move less on scroll (parallax). About one per 14,000px² of screen, mostly deep. Still under reduced motion. | One fixed 2D canvas (`background/Particles.tsx`) on GSAP's ticker, the same frame loop as Lenis, using `window.scrollY` for parallax. The `--particle` token sets the color, re-read when `data-theme` changes. The ticker stops with the tab hidden. |
-| Mascot | Lives at the **center of Home** and scrolls with it. Once it has scrolled out of view, a copy in the **bottom-right corner** peeks in (just the top of its head, leaning in), then comes all the way out and stays fixed there. Scrolling back to Home makes the corner one **pop and vanish**; the Home one was there all along. See the Mascot section for the model itself. | Two slots (`HomeMascot`, `CornerMascot`). A ScrollTrigger on the Home slot toggles the corner timeline. Later both slots render one 3D scene (drei `<View>`). |
+| Mascot | Lives at the **center of Home** and scrolls with it. Once it has scrolled out of view, a copy in the **bottom-right corner** peeks in (just the top of its head, leaning in), then comes all the way out and stays fixed there. Scrolling back to Home makes the corner one **pop and vanish**; the Home one was there all along. See the Mascot section for the model itself. | Two slots (`HomeMascot`, `CornerMascot`). An IntersectionObserver on the Home slot toggles the corner timeline. Each slot has its own small canvas (`Mascot.tsx`, lazy-loaded, rendering only while on screen); both follow one shared state machine, so they always agree. |
 | Reduced motion | `prefers-reduced-motion` turns off marquees, particle drift, parallax, inertial scroll, the theme dissolve (becomes a plain crossfade) and mascot idle motion. The project stack still works with plain stepping. | `useReducedMotion` |
 
 ## Sections
@@ -138,8 +138,8 @@ From back to front (z-order):
 ## Mascot (`MODELSPEC.md`)
 
 **Placement** is covered under Global behavior. It renders in two slots, the center of
-Home and the bottom-right corner. Until step 9 both show a placeholder (a square head
-with a `^_^` face).
+Home and the bottom-right corner. The flat placeholder (a square head with a `^_^` face)
+shows only until the 3D chunk has loaded.
 
 **Built in code, not as a model file.** A cube head and two small sphere hands made
 from three.js primitives. This keeps the model tiny, makes it easy to change, and means
@@ -154,8 +154,8 @@ it can never fall out of sync with the monotone theme (materials read the theme 
   them: waving, holding the phone.
 - **Phone** is a small box with a light-emitting face, a point light and some glow, used
   only in the distracted state.
-- **Speech bubble** is an HTML element tied to the head's position (drei `<Html>`), so
-  it uses the site font and theme. It shows the state's text: `hello!`, `...`, `?`,
+- **Speech bubble** is an HTML element over the top of the canvas (no drei), so it uses
+  the site font and theme. It shows the state's text: `hello!`, `...`, `?`,
   `%$^&!`, or nothing.
 - **State machine** (`mascot/machine.ts`). Every state supplies a target pose (head
   rotation and offset, hand positions, face, bubble). The renderer always eases toward
@@ -171,10 +171,14 @@ it can never fall out of sync with the monotone theme (materials read the theme 
   | `react` | theme switch, section change (short, then back) | small hop or squint | squint or sleepy | none |
 
 - The head turns slightly toward the cursor in `idle` and `attentive`.
-- **Click** opens the ChatOverlay. For now that overlay is a placeholder ("coming soon").
+- **Click** will open the ChatOverlay (step 11). For now it says `coming soon!`.
   The RAG chat about you, with easter eggs, comes later.
 - The scene loads lazily after first paint. While the mascot is off-screen or the tab is
-  hidden, `frameloop="demand"` keeps it from using any CPU.
+  hidden, `frameloop="never"` keeps it from using any CPU.
+- **Built:** `machine.ts` (states, timers, theme reaction; `__mascot.<state>()` in dev to
+  jump to a state), `face.ts` (the 2D face drawing), `MascotModel.tsx` (poses and easing,
+  blinking), `Mascot.tsx` (canvas, bubble, cursor tracking). Colors come from the
+  `--mascot` and `--mascot-ink` tokens; the face is unlit so it keeps its exact colors.
 
 ## Mobile (no mockups, adapted from desktop)
 
@@ -204,7 +208,7 @@ comes later (designed separately or improvised).
 - **Vite + React + TypeScript.** Builds a static site, so it can be hosted anywhere.
 - **Lenis** for smooth scroll and **GSAP + ScrollTrigger + Flip** for pinning,
   scroll-linked and layout animation.
-- **three, @react-three/fiber, @react-three/drei** for the mascot, in a lazy-loaded chunk.
+- **three, @react-three/fiber** for the mascot, in a lazy-loaded chunk (no drei).
 - Plain CSS with custom properties (CSS modules for each component). No UI kit.
 
 ## File layout
@@ -257,7 +261,7 @@ Each step leaves a working site.
 6. ✅ **Projects.** Pinned, scroll-driven stack and detail panel.
 7. ✅ **Particles.** Background field with parallax.
 8. ✅ **Theme dissolve.** Square-tile transition between themes.
-9. **Mascot.** Head, face canvas, states and blending, bubble, hover and click.
+9. ✅ **Mascot.** Head, face canvas, states and blending, bubble, hover and click.
 10. **Mobile + polish.** Responsive layout, accessibility, reduced motion, performance,
     deploy.
 11. **Later.** Chat overlay backed by RAG; blog.
