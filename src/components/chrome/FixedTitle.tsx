@@ -16,9 +16,10 @@ const TITLES: Record<SectionId, Line[]> = {
   contact: [{ text: 'contact', faint: true }],
 }
 
-// Distance that puts a line just below the bottom edge of the viewport.
-const belowViewport = (_: number, el: Element) =>
-  window.innerHeight - el.getBoundingClientRect().top + Number(gsap.getProperty(el, 'y'))
+// Distance that puts the whole title, top line included, below the viewport. Every
+// line moves by this same amount so they keep their order; per-line distances made
+// the top line travel faster and pass through the one below it.
+const belowViewport = (title: HTMLElement) => window.innerHeight - title.getBoundingClientRect().top
 
 /**
  * Large title fixed at the bottom left, behind the content. Its lines drop out of
@@ -43,7 +44,7 @@ export function FixedTitle() {
     }
     if (reducedMotion) return
     const tween = gsap.to(lines, {
-      y: belowViewport,
+      y: belowViewport(ref.current!),
       duration: 0.35,
       ease: 'power2.in',
       stagger: { each: 0.04, from: 'end' },
@@ -64,7 +65,7 @@ export function FixedTitle() {
     const lines = ref.current!.querySelectorAll('[data-line]')
     gsap.fromTo(
       lines,
-      { y: belowViewport },
+      { y: belowViewport(ref.current!) },
       { y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.06 },
     )
   }, [shown, reducedMotion])
