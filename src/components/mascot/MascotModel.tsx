@@ -11,6 +11,26 @@ const EASE = 6
 // Blinks happen every this many seconds (random in range) and last BLINK_S.
 const BLINK_EVERY: [number, number] = [2.5, 6]
 const BLINK_S = 0.13
+// The phone body stays near-black in both themes, so its lit screen always stands out.
+const PHONE_BODY = '#141414'
+// How strongly the phone's glow lights the bottom of the face.
+const FACE_GLOW = 0.45
+
+/** A vertical gradient, clear at the top and white at the bottom: the phone's light on the face. */
+function glowTexture() {
+  const canvas = document.createElement('canvas')
+  canvas.width = 1
+  canvas.height = 64
+  const ctx = canvas.getContext('2d')!
+  const gradient = ctx.createLinearGradient(0, 0, 0, 64)
+  gradient.addColorStop(0.35, 'rgba(255,255,255,0)')
+  gradient.addColorStop(1, 'rgba(255,255,255,1)')
+  ctx.fillStyle = gradient
+  ctx.fillRect(0, 0, 1, 64)
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.colorSpace = THREE.SRGBColorSpace
+  return texture
+}
 
 export type Colors = { head: string; ink: string }
 /** Where the pointer is relative to the mascot: -1..1 on each axis, roughly. */
@@ -90,6 +110,9 @@ export function MascotModel({ colors, pointer, still }: { colors: Colors; pointe
   const left = useRef<THREE.Mesh>(null)
   const phone = useRef<THREE.Group>(null)
   const glow = useRef<THREE.PointLight>(null)
+  const faceGlow = useRef<THREE.MeshBasicMaterial>(null)
+  const faceGlowMap = useMemo(() => glowTexture(), [])
+  useEffect(() => () => faceGlowMap.dispose(), [faceGlowMap])
   const blink = useRef({ on: false, next: 2 })
 
   const canvas = useMemo(() => {
@@ -141,6 +164,7 @@ export function MascotModel({ colors, pointer, still }: { colors: Colors; pointe
     left.current!.scale.setScalar(damp(left.current!.scale.x, leftShown))
     phone.current!.scale.setScalar(damp(phone.current!.scale.x, pose.phone))
     glow.current!.intensity = phone.current!.scale.x * 6
+    faceGlow.current!.opacity = phone.current!.scale.x * FACE_GLOW
 
     // Blinking, for faces with open eyes.
     const b = blink.current
@@ -173,6 +197,18 @@ export function MascotModel({ colors, pointer, still }: { colors: Colors; pointe
             <meshLambertMaterial key={i} attach={`material-${i}`} color={colors.head} />
           ),
         )}
+        {/* The phone's light on the face. The face itself is unlit, so this adds it on top. */}
+        <mesh position={[0, 0, HEAD / 2 + 0.002]}>
+          <planeGeometry args={[HEAD, HEAD]} />
+          <meshBasicMaterial
+            ref={faceGlow}
+            map={faceGlowMap}
+            transparent
+            opacity={0}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+          />
+        </mesh>
       </mesh>
       <mesh ref={right} position={TUCKED_RIGHT} scale={0}>
         <sphereGeometry args={[HAND, 24, 16]} />
@@ -186,7 +222,7 @@ export function MascotModel({ colors, pointer, still }: { colors: Colors; pointe
       <group ref={phone} position={[0, -0.78, 0.95]} rotation={[-1.0, 0, 0]} scale={0}>
         <mesh>
           <boxGeometry args={[0.5, 0.85, 0.06]} />
-          <meshLambertMaterial color={colors.head} />
+          <meshLambertMaterial color={PHONE_BODY} />
         </mesh>
         <mesh position={[0, 0, 0.032]}>
           <planeGeometry args={[0.42, 0.74]} />

@@ -28,6 +28,8 @@ const IDLE_MS: [number, number] = [7000, 12000]
 const BORED_MS = 25000
 // Coming back to the tab after this long says hello again.
 const AWAY_MS = 60000
+// Section changes get a small reaction at most this often, so scrolling around isn't noisy.
+const SECTION_REACT_GAP_MS = 6000
 
 let snapshot: Snapshot = { state: 'hello', face: 'happy', bubble: 'hello!', since: performance.now() }
 const listeners = new Set<() => void>()
@@ -36,6 +38,7 @@ let started = false
 let hovering = false
 let lastInteraction = performance.now()
 let hiddenAt = 0
+let lastSectionReact = 0
 
 const random = ([min, max]: [number, number]) => min + Math.random() * (max - min)
 
@@ -101,6 +104,18 @@ function react(face: Face) {
   if (hovering) return
   set('react', face)
   after(REACT_MS, idle)
+}
+
+/**
+ * The visitor moved to another section: a happy hop, if the mascot is only idling or
+ * looking around (never over hello, the phone or hover), and not too often.
+ */
+export function sectionChanged() {
+  const now = performance.now()
+  if (now - lastSectionReact < SECTION_REACT_GAP_MS) return
+  if (snapshot.state !== 'idle' && snapshot.state !== 'curious') return
+  lastSectionReact = now
+  react('happy')
 }
 
 /** Starts the behaviour loop once, however many slots mount. */

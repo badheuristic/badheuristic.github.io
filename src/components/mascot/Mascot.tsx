@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
+import { useActiveSection } from '../../hooks/useActiveSection'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { appReady } from '../../lib/ready'
-import { start, useMascot } from './machine'
+import { sectionChanged, start, useMascot } from './machine'
 import { MascotModel, type Colors, type Pointer } from './MascotModel'
 import styles from './Mascot.module.css'
 
@@ -25,6 +26,13 @@ export default function Mascot() {
 
   // Says hello once the loader is gone, not behind it.
   useEffect(() => void appReady.then(start), [])
+
+  // React to section changes (not to the first section on load).
+  const section = useActiveSection()
+  const firstSection = useRef(section)
+  useEffect(() => {
+    if (section !== firstSection.current) sectionChanged()
+  }, [section])
 
   useEffect(() => {
     const el = ref.current!
