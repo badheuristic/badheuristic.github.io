@@ -4,10 +4,6 @@
 }
 
 .intro {
-  max-width: 46ch;
   /* Lines up with the name in the fixed title. */
   margin-bottom: calc(var(--gutter) + 1rem);
-  font-size: var(--text-lg);
-  font-weight: var(--weight-regular);
-  line-height: 1.35;
 }

@@ -1,3 +1,5 @@
+/* Exactly one screen tall, content centered, so it looks the same entered from either
+   side. (If the content outgrows that, the section grows and scrolls freely inside.) */
 .about {
   display: grid;
 }
@@ -13,7 +15,8 @@
   justify-content: center;
   width: calc(var(--col-start) - var(--gutter));
   height: 100dvh;
-  margin-top: calc(-1 * (var(--gutter) + 4rem));
+  /* Spans the section's padding too, without adding to its height. */
+  margin-block: calc(-1 * (var(--gutter) + 4rem));
   overflow: hidden;
 }
 
@@ -39,15 +42,10 @@
 
 .content {
   grid-area: 1 / 1;
+  align-self: center;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-}
-
-.lead {
-  font-size: var(--text-lg);
-  font-weight: var(--weight-regular);
-  line-height: 1.35;
+  gap: 1.5rem;
 }
 
 .body {
@@ -61,12 +59,12 @@
 }
 
 .image {
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 16 / 9;
   background: var(--surface);
 }
 
 .heading {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   font-size: var(--text-lg);
   font-weight: var(--weight-regular);
 }
@@ -74,7 +72,7 @@
 .experience {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 1.5rem;
   list-style: none;
 }
 
@@ -84,7 +82,7 @@
 }
 
 .dates {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.4rem;
   color: var(--fg-muted);
 }
 

@@ -1,5 +1,7 @@
 import { about, experience, skills } from '../../content/about'
 import { SkillMarquee } from '../about/SkillMarquee'
+import { INTRO_SLOT } from '../intro/slots'
+import intro from '../intro/Intro.module.css'
 import layout from './Section.module.css'
 import styles from './About.module.css'
 
@@ -20,7 +22,9 @@ export function About() {
       </div>
 
       <div className={`${layout.column} ${styles.content}`}>
-        <p className={styles.lead}>{about.lead}</p>
+        <p id={INTRO_SLOT.about} className={`${intro.text} ${intro.slot}`}>
+          {about.lead}
+        </p>
         <p className={styles.body}>{about.body}</p>
 
         <div className={styles.images}>

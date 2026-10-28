@@ -1,13 +1,7 @@
 import type Lenis from 'lenis'
 import { sections } from '../content/sections'
+import { createWheelGestures } from './wheelGesture'
 
-// A pause this long between wheel events starts a new gesture. Trackpad inertia keeps
-// firing well within it, so one flick moves one section, not several.
-const GESTURE_GAP_MS = 180
-// A fresh flick during a fading inertia tail shows up as a jump in speed. A delta this
-// many times the previous one (and at least SPIKE_MIN_PX) counts as a new gesture.
-const SPIKE_RATIO = 1.6
-const SPIKE_MIN_PX = 10
 // A gesture that starts within this fraction of the viewport from a tall section's edge
 // skips the stop at the edge and goes straight on to the next section.
 const EDGE_SNAP = 0.15
@@ -32,12 +26,7 @@ function layout(lenis: Lenis) {
     const start = el.getBoundingClientRect().top + lenis.animatedScroll
     const end = start + el.offsetHeight - vh
     stops.push(Math.min(start, lenis.limit))
-    // A section with `data-snap-steps="n"` (the pinned project stack) snaps through n
-    // evenly spaced stops instead of scrolling freely.
-    const steps = Number(el.dataset.snapSteps)
-    if (steps > 1) {
-      for (let k = 1; k < steps; k++) stops.push(Math.min(start + ((end - start) * k) / (steps - 1), lenis.limit))
-    } else if (end - start > FREE_ZONE_MIN_PX) {
+    if (end - start > FREE_ZONE_MIN_PX) {
       // Tall section: stop at both its top and its bottom, scroll freely between.
       zones.push({ start, end })
       stops.push(Math.min(end, lenis.limit))
@@ -58,9 +47,7 @@ function layout(lenis: Lenis) {
 export function createSectionSnap(getLenis: () => Lenis | null) {
   let gesture = 0
   let spentGesture = -1
-  let lastWheel = 0
-  let lastWheelSize = 0
-  let lastWheelDir = 0
+  const isNewWheelGesture = createWheelGestures()
   let snapping = false
   // Scroll position where the current gesture began.
   let originGesture = -1
@@ -131,18 +118,8 @@ export function createSectionSnap(getLenis: () => Lenis | null) {
       gesture++
       return true
     }
-    if (event.type === 'wheel') {
-      const now = performance.now()
-      const size = Math.abs(deltaY)
-      const isNew =
-        now - lastWheel > GESTURE_GAP_MS ||
-        Math.sign(deltaY) !== lastWheelDir ||
-        (!snapping && size > lastWheelSize * SPIKE_RATIO && size > SPIKE_MIN_PX)
-      if (isNew) gesture++
-      lastWheel = now
-      lastWheelSize = size
-      lastWheelDir = Math.sign(deltaY)
-    }
+    // Speed spikes only count between glides: mid-glide they're the same flick's tail.
+    if (event.type === 'wheel' && isNewWheelGesture(deltaY, !snapping)) gesture++
     if (deltaY === 0) return true
     // Mostly sideways swipes belong to horizontal controls (dragging the project stack).
     if (event.type.startsWith('touch') && Math.abs(deltaX) > Math.abs(deltaY)) return false

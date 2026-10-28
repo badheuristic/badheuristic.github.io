@@ -1,117 +1,108 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { gsap } from 'gsap'
 import { projects } from '../../content/projects'
 import { useActiveSection } from '../../hooks/useActiveSection'
-import { jumpTo, scrollTo } from '../../lib/scroll'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { GLIDE } from '../../lib/sectionSnap'
 import { ProjectDetail } from '../projects/ProjectDetail'
 import { ProjectStack } from '../projects/ProjectStack'
 import layout from './Section.module.css'
 import styles from './Projects.module.css'
 
+const LAST = projects.length - 1
+const clamp = (index: number) => Math.min(Math.max(index, 0), LAST)
+
 /**
- * Pinned project stack. The section is one viewport tall plus a scroll step per extra
- * card; its stage sticks to the viewport while scrolling through that length moves the
- * stack one card per step. Section snapping (data-snap-steps) stops on each card.
+ * The project stack. It moves on its own, separate from the page scroll: scrolling or
+ * dragging over it, clicking a card, or Left/Right while Projects is in view. Scrolling
+ * past an end card moves on to the next section.
  */
 export function Projects() {
-  const sectionRef = useRef<HTMLElement>(null)
   const position = useRef(0)
   const apply = useRef<() => void>(() => {})
+  const tween = useRef<gsap.core.Tween | null>(null)
+  const currentRef = useRef(0)
   const [current, setCurrent] = useState(0)
   const isActive = useActiveSection() === 'projects'
+  const reducedMotion = useReducedMotion()
 
   const register = useCallback((fn: () => void) => {
     apply.current = fn
   }, [])
 
-  useEffect(() => {
-    const trigger = ScrollTrigger.create({
-      trigger: sectionRef.current,
-      start: 'top top',
-      end: 'bottom bottom',
-      onUpdate: (self) => {
-        position.current = self.progress * (projects.length - 1)
-        apply.current()
-        setCurrent(Math.round(position.current))
-      },
-    })
-    return () => trigger.kill()
-  }, [])
-
-  // Where the pin starts, and how far apart the cards' scroll stops are.
-  const geometry = useCallback(() => {
-    const section = sectionRef.current!
-    const top = section.getBoundingClientRect().top + window.scrollY
-    const step = (section.offsetHeight - window.innerHeight) / (projects.length - 1)
-    return { top, step }
-  }, [])
-
-  // Scroll to the point in the pin where card `index` is in front.
-  const select = useCallback(
+  // Glide the stack to card `index`, at the same speed as section glides.
+  const go = useCallback(
     (index: number) => {
-      const { top, step } = geometry()
-      scrollTo(top + step * index)
+      const next = clamp(index)
+      currentRef.current = next
+      setCurrent(next)
+      tween.current?.kill()
+      tween.current = gsap.to(position, {
+        current: next,
+        duration: reducedMotion ? 0 : GLIDE.duration,
+        ease: 'power3.inOut',
+        onUpdate: () => apply.current(),
+      })
     },
-    [geometry],
+    [reducedMotion],
   )
 
-  // Dragging moves the page (and so the stack) live, then settles on a card.
+  const onStep = useCallback(
+    (dir: number) => {
+      const next = currentRef.current + dir
+      if (next < 0 || next > LAST) return false
+      go(next)
+      return true
+    },
+    [go],
+  )
+
+  // Dragging moves the stack live, then settles on a card.
   const dragFrom = useRef(0)
   const onDragStart = useCallback(() => {
+    tween.current?.kill()
     dragFrom.current = position.current
   }, [])
-  const onDrag = useCallback(
-    (cards: number) => {
-      const { top, step } = geometry()
-      const index = Math.min(Math.max(dragFrom.current + cards, 0), projects.length - 1)
-      jumpTo(top + step * index)
-    },
-    [geometry],
-  )
+  const onDrag = useCallback((cards: number) => {
+    position.current = clamp(dragFrom.current + cards)
+    apply.current()
+    setCurrent(Math.round(position.current))
+  }, [])
   const onDragEnd = useCallback(
     (cards: number) => {
       // Any deliberate drag moves at least one card in its direction.
       const by = Math.abs(cards) < 0.15 ? 0 : Math.sign(cards) * Math.max(1, Math.round(Math.abs(cards)))
-      select(Math.min(Math.max(Math.round(dragFrom.current) + by, 0), projects.length - 1))
+      go(Math.round(dragFrom.current) + by)
     },
-    [select],
+    [go],
   )
+
+  useEffect(() => () => void tween.current?.kill(), [])
 
   useEffect(() => {
     if (!isActive) return
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return
-      const next = current + (e.key === 'ArrowRight' ? 1 : -1)
-      if (next < 0 || next >= projects.length) return
-      e.preventDefault()
-      select(next)
+      if (onStep(e.key === 'ArrowRight' ? 1 : -1)) e.preventDefault()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [isActive, current, select])
+  }, [isActive, onStep])
 
   return (
-    <section
-      ref={sectionRef}
-      id="projects"
-      className={styles.projects}
-      style={{ '--cards': projects.length } as React.CSSProperties}
-      data-snap-steps={projects.length}
-      aria-label="Projects"
-    >
-      <div className={`${layout.section} ${styles.stage}`}>
-        <ProjectStack
-          projects={projects}
-          position={position}
-          register={register}
-          onSelect={select}
-          onDragStart={onDragStart}
-          onDrag={onDrag}
-          onDragEnd={onDragEnd}
-        />
-        <div className={layout.column}>
-          <ProjectDetail project={projects[current]} />
-        </div>
+    <section id="projects" className={`${layout.section} ${styles.projects}`} aria-label="Projects">
+      <ProjectStack
+        projects={projects}
+        position={position}
+        register={register}
+        onSelect={go}
+        onStep={onStep}
+        onDragStart={onDragStart}
+        onDrag={onDrag}
+        onDragEnd={onDragEnd}
+      />
+      <div className={styles.detail}>
+        <ProjectDetail project={projects[current]} />
       </div>
     </section>
   )

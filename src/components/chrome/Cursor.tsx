@@ -26,8 +26,6 @@ export function Cursor() {
     if (!enabled) return
     const dot = dotRef.current!
     const trail = trailRef.current!
-    const root = document.documentElement
-    root.classList.add(styles.hideNative)
 
     const target = { x: 0, y: 0 }
     const trailPos = { x: 0, y: 0 }
@@ -71,7 +69,6 @@ export function Cursor() {
       cancelAnimationFrame(frame)
       window.removeEventListener('pointermove', onMove)
       document.removeEventListener('pointerleave', onLeave)
-      root.classList.remove(styles.hideNative)
     }
   }, [enabled])
 

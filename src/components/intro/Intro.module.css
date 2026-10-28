@@ -1,0 +1,29 @@
+/* The intro paragraph: Home's text, repeated as About's lead. */
+.text {
+  max-width: 46ch;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-regular);
+  line-height: 1.35;
+}
+
+/* Where the text sits in Home and About. Invisible but kept for layout and screen
+   readers; what you see is the fixed copy, which travels between the two. */
+.slot {
+  opacity: 0;
+}
+
+.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-content);
+  margin: 0;
+  pointer-events: none;
+  opacity: 0.15;
+  transition: opacity var(--dur) var(--ease-out);
+  will-change: transform;
+}
+
+.fixed[data-lit='true'] {
+  opacity: 1;
+}

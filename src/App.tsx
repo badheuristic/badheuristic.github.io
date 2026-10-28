@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Cursor } from './components/chrome/Cursor'
 import { FixedTitle } from './components/chrome/FixedTitle'
+import { FixedIntro } from './components/intro/FixedIntro'
 import { Header } from './components/chrome/Header'
 import { Nav } from './components/chrome/Nav'
 import { ContactOverlay } from './components/contact/ContactOverlay'
@@ -30,6 +31,7 @@ export function App() {
       <Header />
       <Nav />
       <FixedTitle />
+      <FixedIntro />
       <ContactOverlay />
       <CornerMascot />
 

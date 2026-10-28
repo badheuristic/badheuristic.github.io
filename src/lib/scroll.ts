@@ -77,9 +77,3 @@ export function scrollTo(target: number | string | HTMLElement) {
     el?.scrollIntoView()
   }
 }
-
-/** Moves the page to `y` instantly, with no glide (e.g. following a drag). */
-export function jumpTo(y: number) {
-  if (lenis) lenis.scrollTo(y, { immediate: true, force: true })
-  else window.scrollTo({ top: y })
-}

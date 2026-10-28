@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
+import { createWheelGestures } from '../../lib/wheelGesture'
 import type { Project } from '../../content/projects'
 import styles from './ProjectStack.module.css'
 
@@ -43,6 +44,11 @@ type Props = {
   /** Lets the parent re-pose the cards after updating `position`. */
   register: (apply: () => void) => void
   onSelect: (index: number) => void
+  /**
+   * A wheel gesture over the stack, in direction `dir` (1 = forward). Returns false when
+   * the stack can't move that way (an end card), so the gesture scrolls the page instead.
+   */
+  onStep: (dir: number) => boolean
   /** Dragging horizontally: called with how many cards the drag has moved so far. */
   onDragStart: () => void
   onDrag: (cards: number) => void
@@ -55,6 +61,7 @@ export function ProjectStack({
   position,
   register,
   onSelect,
+  onStep,
   onDragStart,
   onDrag,
   onDragEnd,
@@ -70,6 +77,33 @@ export function ProjectStack({
     const size = stackRef.current?.querySelector('li')?.offsetWidth || 1
     return -(clientX - drag.current!.x) / (size * DRAG_PER_CARD)
   }
+
+  // One wheel gesture (vertical or sideways) moves one card. Events the stack claims stop
+  // here, so Lenis and section snapping never see them; the rest scroll the page.
+  const step = useRef(onStep)
+  useEffect(() => {
+    step.current = onStep
+  })
+  useEffect(() => {
+    const stack = stackRef.current!
+    const isNewGesture = createWheelGestures()
+    let gesture = 0
+    let claimed = -1
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey) return
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
+      if (delta === 0) return
+      if (isNewGesture(delta)) gesture++
+      if (claimed !== gesture) {
+        if (!step.current(Math.sign(delta))) return
+        claimed = gesture
+      }
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    stack.addEventListener('wheel', onWheel, { passive: false })
+    return () => stack.removeEventListener('wheel', onWheel)
+  }, [])
 
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0) return

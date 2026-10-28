@@ -1,5 +1,6 @@
 .scene {
-  --card: clamp(13rem, 24vw, 22rem);
+  /* Shrinks on short screens too, to stay clear of the intro band below. */
+  --card: clamp(10rem, min(22vw, 32dvh), 22rem);
 
   display: grid;
   justify-items: center;
@@ -68,8 +69,8 @@
 
 .shadow {
   width: calc(var(--card) * 2.2);
-  height: 2.5rem;
-  margin-top: 3.5rem;
+  height: 2rem;
+  margin-top: 2.5rem;
   background: radial-gradient(closest-side, rgb(0 0 0 / 0.22), transparent);
   filter: blur(6px);
 }

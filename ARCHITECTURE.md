@@ -72,6 +72,7 @@ From back to front (z-order):
 
 | Feature | Behavior | Implementation |
 |---|---|---|
+| Intro hand-off | Home's intro stays fixed as you scroll on, dimmed outside Home. About's lead is the same text: when it scrolls up to the intro, the intro lights up and rides along with About, as if the paragraph moved into About. | One fixed copy (`intro/FixedIntro.tsx`) positioned each frame from two invisible slots (Home's intro, About's lead), which keep the layout and the text for screen readers. It publishes `--intro-band` so Projects keeps clear of it. |
 | Section scrolling | One gesture (wheel flick, swipe, arrow/page key) glides to the next or previous section, like clicking it in the nav, so you never stop halfway (e.g. with the contact card half up). Sections taller than the viewport (About) scroll freely inside; the gesture that reaches their edge stops there and the next one moves on; a gesture that starts within 15% of a screen of the edge goes straight on. Free scrolling inside runs at 1.4× wheel speed. Home/End jump to the ends. Nav links and closing the contact card use the same glide (0.4s, ease in-out). | Lenis's `virtualScroll` hook (`lib/sectionSnap.ts`) claims gestures and snaps with `scrollTo`; a 180ms pause between wheel events, a change of direction, or a jump in wheel speed (a fresh flick over a fading inertia tail) starts a new gesture, so trackpad inertia can't skip sections but a new flick isn't swallowed. Lenis runs on GSAP's ticker. |
 | Cursor | A dot at the pointer with a larger, fainter circle easing behind it. Mouse devices only. | `Cursor.tsx`, one `requestAnimationFrame` loop |
 | Active section | Switches as soon as the next section peeks in: the section covering a line 15% in from the edge you're scrolling toward (near the bottom scrolling down, near the top scrolling up). Drives everything below. | Checked on every ScrollTrigger update, feeding a tiny store (`useActiveSection`) |
@@ -94,19 +95,17 @@ From back to front (z-order):
 - **Project stack** in place of the carousel in the mockup (see `stack.png`). The active
   card is large in front. The other cards recede into depth to the right, smaller and
   overlapping.
-- **Scroll-driven.** The section is one viewport tall plus 70vh per extra card, and its
-  stage is `position: sticky`, so it stays put while scrolling moves through the cards.
-  Scroll progress maps to a fractional current card, so cards move continuously between
-  positions. Section snapping (`data-snap-steps`) puts a stop on every card: one gesture,
-  one card; after the last card the next gesture goes on to About.
+- **Its own control, not the page scroll.** Projects is one screen; the stack keeps its
+  own current card. A wheel gesture over the stack (vertical or sideways) moves one card;
+  past the first or last card it scrolls the page on as usual. Dragging sideways moves it
+  live and settles on a card; clicking a card or Left/Right also moves it. Glides take the
+  same 0.4s as section glides. Navigating to another section never steps through cards.
   - Each card's pose (x offset, depth, `rotateY`, opacity, depth fog) is worked out from
     `index - current`. Cards share one `perspective` and are layered by z-index rather
     than `preserve-3d` depth sorting, which browsers don't apply consistently. Passed
     cards slide off to the left toward the viewer and fade.
-  - Clicking a card or pressing Left/Right glides the page to that card's stop, so the
-    scroll position and the stack never disagree.
-  - Dragging the stack horizontally moves it live (left = forward), then settles on the
-    nearest card in the drag's direction. It drives the page scroll too, so everything stays in sync.
+  - Stack and details sit side by side above `--intro-band`, the strip where the dimmed
+    intro rests (see Intro below).
   - Soft ellipse shadow under the stack (it's in the mockup and is not a border, so it
     stays).
 - Detail text for the active project (title, year, blurb, links), where the mockup's

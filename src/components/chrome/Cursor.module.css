@@ -1,7 +1,10 @@
-/* Applied to <html> while the custom cursor is active. */
-:global(html).hideNative,
-:global(html).hideNative * {
-  cursor: none !important;
+/* Hide the system cursor wherever the custom one shows (the same query as Cursor.tsx).
+   A plain rule, not a class added from JS, so it can't fall out of step with it. */
+@media (hover: hover) and (pointer: fine) {
+  :global(html),
+  :global(html) * {
+    cursor: none !important;
+  }
 }
 
 .dot,
