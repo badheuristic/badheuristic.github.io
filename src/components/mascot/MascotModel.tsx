@@ -16,6 +16,10 @@ const PHONE_BODY = '#141414'
 // How strongly the phone's glow lights the bottom of the face.
 const FACE_GLOW = 0.45
 
+// Where the speech bubble hangs from: just above the top of the head, in head space.
+const BUBBLE_ANCHOR = new THREE.Vector3(0, HEAD / 2 + 0.12, 0)
+const anchorPoint = new THREE.Vector3()
+
 /** A vertical gradient, clear at the top and white at the bottom: the phone's light on the face. */
 function glowTexture() {
   const canvas = document.createElement('canvas')
@@ -102,7 +106,15 @@ function targetPose(state: string, s: number, t: number, look: Pointer, still: b
 }
 const CURIOUS_TURN_S = 1.6
 
-export function MascotModel({ colors, pointer, still }: { colors: Colors; pointer: React.RefObject<Pointer>; still: boolean }) {
+type Props = {
+  colors: Colors
+  pointer: React.RefObject<Pointer>
+  /** Positioned each frame over the top of the head, so the bubble moves with it. */
+  bubble: React.RefObject<HTMLDivElement | null>
+  still: boolean
+}
+
+export function MascotModel({ colors, pointer, bubble, still }: Props) {
   const { face } = useMascot()
   const root = useRef<THREE.Group>(null)
   const head = useRef<THREE.Mesh>(null)
@@ -165,6 +177,17 @@ export function MascotModel({ colors, pointer, still }: { colors: Colors; pointe
     phone.current!.scale.setScalar(damp(phone.current!.scale.x, pose.phone))
     glow.current!.intensity = phone.current!.scale.x * 6
     faceGlow.current!.opacity = phone.current!.scale.x * FACE_GLOW
+
+    // Hang the bubble over the head's top as it is on screen this frame.
+    if (bubble.current) {
+      anchorPoint.copy(BUBBLE_ANCHOR)
+      h.localToWorld(anchorPoint).project(state.camera)
+      const x = ((anchorPoint.x + 1) / 2) * state.size.width
+      const y = ((1 - anchorPoint.y) / 2) * state.size.height
+      // Moved directly every frame rather than through React state.
+      // oxlint-disable-next-line react/immutability
+      bubble.current.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${h.rotation.z * -20}deg)`
+    }
 
     // Blinking, for faces with open eyes.
     const b = blink.current

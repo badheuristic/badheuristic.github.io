@@ -10,30 +10,63 @@
   inset: 0;
 }
 
-/* Speech bubble above the head: a square box with a small tail. */
+/* A point just above the head, moved there each frame by MascotModel. */
+.anchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Speech bubble in the mascot's own colors, hanging off the anchor by a trail of two
+   small squares (the site's square motif) instead of a pointed tail. */
 .bubble {
   position: absolute;
-  top: 4%;
-  left: 50%;
-  z-index: 1;
+  bottom: 18px;
+  left: 0;
+  display: grid;
   translate: -50% 0;
-  padding: 0.35rem 0.65rem;
-  background: var(--fg);
-  color: var(--bg);
+  padding: 0.35rem 0.7rem;
+  background: var(--mascot);
+  color: var(--mascot-ink);
   font-size: var(--text-sm);
   white-space: nowrap;
-  pointer-events: none;
+  transform-origin: 50% 100%;
   animation: pop 0.35s var(--ease-out) both;
 }
 
+.bubble::before,
 .bubble::after {
   content: '';
   position: absolute;
   top: 100%;
-  left: 50%;
-  translate: -50% 0;
-  border: 6px solid transparent;
-  border-top-color: var(--fg);
+  background: var(--mascot);
+}
+
+.bubble::before {
+  left: calc(50% - 3px);
+  width: 6px;
+  height: 6px;
+  margin-top: 3px;
+}
+
+.bubble::after {
+  left: calc(50% + 2px);
+  width: 4px;
+  height: 4px;
+  margin-top: 12px;
+}
+
+/* The full text and the typed part share one grid cell; the full text sets the size. */
+.sizer,
+.typed {
+  grid-area: 1 / 1;
+}
+
+.sizer {
+  visibility: hidden;
 }
 
 @keyframes pop {
