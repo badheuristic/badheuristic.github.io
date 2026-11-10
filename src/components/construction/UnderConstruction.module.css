@@ -1,0 +1,73 @@
+/* One screen: a short note in the content column, and the words at the bottom, as wide
+   as the page allows. */
+.page {
+  position: relative;
+  z-index: var(--z-content);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4rem;
+  min-height: 100svh;
+  padding: calc(var(--gutter) * 2 + 4rem) var(--gutter) var(--gutter);
+}
+
+.note {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-left: calc(var(--col-start) - var(--gutter));
+  max-width: 62ch;
+}
+
+.wall {
+  display: grid;
+  grid-template-columns: repeat(12, 0.6rem);
+  gap: 0.2rem;
+}
+
+.tile {
+  aspect-ratio: 1;
+  background: var(--fg-faint);
+  transition: background-color var(--dur) var(--ease-out);
+}
+
+.tile[data-laid='true'] {
+  background: var(--fg);
+}
+
+.text {
+  color: var(--fg-muted);
+}
+
+.link {
+  font-size: var(--text-lg);
+  transition: translate var(--dur) var(--ease-out);
+}
+
+.link:hover,
+.link:focus-visible {
+  translate: 0.4rem 0;
+}
+
+/* "construction" spans the page: at this tracking it's just under 6em wide, so a sixth
+   of the width between the gutters fills it (less on short screens, so it still fits). */
+.title {
+  display: flex;
+  flex-direction: column;
+  margin-left: -0.04em;
+  font-size: min(calc((100vw - var(--gutter) * 2) / 6), 40svh);
+  font-weight: var(--weight-light);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.line {
+  display: block;
+}
+
+.line:first-child {
+  color: var(--fg-faint);
+}

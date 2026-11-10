@@ -78,7 +78,7 @@ From back to front (z-order):
 | ThemeSwitch | A text toggle in the top right next to Blog: `light / dark`, with the current theme at full contrast and the other muted. Easy to read, and it fits the type-led look. Switching runs a **square-tile dissolve**: a grid of squares flips from the clicked point outward, revealing the new theme (the same square motif as the particles). The mascot reacts briefly (squints going light, sleepy face going dark). Starts from `prefers-color-scheme` and is saved in localStorage. | `data-theme` on `<html>` swaps the tokens. The dissolve (`lib/themeDissolve.ts`) is a view transition: the new-theme snapshot (on top by default) shows only through a `clip-path: path()` of 72px tiles rebuilt each frame, each growing from its center on a delay set by its distance from the click (0.28s per tile, 0.5s ripple). Reduced motion gets the default crossfade; browsers without view transitions switch instantly. Particles and mascot read the tokens too. |
 | Particles | Small squares that drift slowly. Each has a depth value: deeper squares are smaller and fainter and move less on scroll (parallax). About one per 14,000px² of screen, mostly deep. Still under reduced motion. | One fixed 2D canvas (`background/Particles.tsx`) on GSAP's ticker, the same frame loop as Lenis, using `window.scrollY` for parallax. The `--particle` token sets the color, re-read when `data-theme` changes. The ticker stops with the tab hidden. |
 | Mascot | Lives at the **center of Home** and scrolls with it. Once it has scrolled out of view, a copy in the **bottom-right corner** peeks in (just the top of its head, leaning in), then comes all the way out and stays fixed there. Scrolling back to Home makes the corner one **pop and vanish**; the Home one was there all along. See the Mascot section for the model itself. | Two slots (`HomeMascot`, `CornerMascot`). An IntersectionObserver on the Home slot toggles the corner timeline. Each slot has its own small canvas (`Mascot.tsx`, lazy-loaded, rendering only while on screen); both follow one shared state machine, so they always agree. |
-| Loader | From the first byte, a blank page in the current theme with the logo's asterisk turning. It fades out once the fonts and the mascot have loaded (8s at most), so nothing shows in a fallback font or as the placeholder. Scrolling is locked and the mascot's hello waits until then. | Inline markup and CSS in `index.html`; `lib/ready.ts` exports `appReady` and fades the loader. The mascot chunk is fetched as the app starts. Fonts are self-hosted subsets of Iosevka Aile (about 86KB per weight instead of 1.2MB), regenerated with `scripts/subset-fonts.sh`. |
+| Loader | From the first byte, a blank page in the current theme with the logo's asterisk turning. It fades out once the fonts and the mascot have loaded (8s at most), so nothing shows in a fallback font or as the placeholder. Scrolling is locked and the mascot's hello waits until then. | Inline markup and CSS in `index.html`; `lib/loader.ts` fades the loader; `lib/ready.ts` exports `appReady`. The mascot chunk is fetched as the app starts. Fonts are self-hosted subsets of Iosevka Aile (about 86KB per weight instead of 1.2MB), regenerated with `scripts/subset-fonts.sh`. |
 | Reduced motion | `prefers-reduced-motion` turns off marquees, particle drift, parallax, inertial scroll, the theme dissolve (becomes a plain crossfade) and mascot idle motion. The project stack still works with plain stepping. | `useReducedMotion` |
 
 ## Sections
@@ -203,8 +203,9 @@ Below 1024px wide (phones, tablets in portrait) or 500px tall (phones in landsca
 
 ## Blog
 
-External link in the top right. A blog site of its own, following the same design rules,
-comes later (designed separately or improvised).
+`Blog` in the top right, linking to `/blog/`. The blog is its own Astro project and repo
+(`../blog`, `badheuristic/blog`), with the same design rules, served by GitHub Pages at
+`badheuristic.github.io/blog` (same origin, so the stored theme is shared).
 
 ## Stack
 
@@ -272,6 +273,14 @@ Each step leaves a working site.
 
 Mechanics first. Content is placeholder until the site's behavior is done:
 
+- **The public site is a construction page.** While `site.underConstruction` is true, the
+  build shows only `components/construction/UnderConstruction.tsx`: the header, the
+  particles, a short note with a link to the blog, a row of squares being laid, and
+  "under construction" as wide as the page. `main.tsx` loads it or the app, never both,
+  so the page doesn't fetch the mascot. `bun dev` shows the real site; add
+  `?construction` to the URL to see the page. GitHub Pages deploys on every push to
+  `main` (`.github/workflows/deploy.yml`), and every other address gets the same page.
+
 - **Name is redacted.** `site.name` in `src/content/site.ts` is empty, so `<Name>` shows a
   solid bar instead. Fill it in to reveal the name.
 - **Projects are empty placeholder cards** until the stack mechanics work.
@@ -280,5 +289,3 @@ Mechanics first. Content is placeholder until the site's behavior is done:
 
 - **Project content.** What projects go in the stack, and do they have images or
   screenshots?
-- **Hosting.** Where will it be deployed (Vercel, Netlify, GitHub Pages, ...)? Only
-  matters at step 10.

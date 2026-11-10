@@ -1,4 +1,7 @@
 export const site = {
+  // While true, the public build shows only the construction page (with a link to the
+  // blog). `bun dev` still shows the site; add ?construction to see the page there.
+  underConstruction: true,
   // Left empty on purpose: the name is redacted for now. Set it to show it.
   name: '',
   // Length of the redaction bar, in characters, while `name` is empty.
