@@ -4,7 +4,7 @@
   /* Theme: light (default) */
   --bg: #ffffff;
   --fg: #000000;
-  --fg-muted: #7a7a7a;
+  --fg-muted: #6e6e6e;
   --fg-faint: #dcdcdc;
   /* Section titles behind the content: fainter still, so text over them stays readable. */
   --title-faint: #ededed;

@@ -8,7 +8,7 @@ export function Header() {
     <header className={styles.header}>
       <Logo />
       <div className={styles.end}>
-        <a href={site.links.blog} className={styles.blog} target="_blank" rel="noreferrer">
+        <a href={site.links.blog} className={styles.blog}>
           Blog
         </a>
         <ThemeSwitch />
